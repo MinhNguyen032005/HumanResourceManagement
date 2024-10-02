@@ -1,12 +1,14 @@
 package view;
 
+import controller.IController;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class MyMenuBar extends MenuBar {
     Menu nhanSu, chamCong, tienLuong, daoTao, tuyenDung, danhGia;
 
-    public MyMenuBar() {
+    public MyMenuBar(IController iController) {
         nhanSu = new Menu("1.Nhân " + "sự");
         chamCong = new Menu("2.chấm" + "công");
         tienLuong = new Menu("3.Tiền lương");
