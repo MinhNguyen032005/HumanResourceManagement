@@ -19,10 +19,6 @@ public class MyFame  extends JFrame {
 
 
         setResizable(false);
-        setVisible(true);
-
-
-
 
     }
 }

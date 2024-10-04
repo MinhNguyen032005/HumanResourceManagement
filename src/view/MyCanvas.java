@@ -13,8 +13,8 @@ public class MyCanvas extends JPanel {
         this.panelTop = panelTop;
         this.panelMid = panelMid;
         this.panelBottom = panelBottom;
-        add(panelTop, BorderLayout.SOUTH);
+        add(panelTop, BorderLayout.NORTH);
         add(panelMid,BorderLayout.CENTER);
-        add(panelBottom,BorderLayout.NORTH);
+        add(panelBottom,BorderLayout.SOUTH);
     }
 }
