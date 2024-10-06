@@ -3,12 +3,12 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-public class MyCanvas extends JPanel {
-    PanelTop panelTop;
-    PanelMid panelMid;
-    PanelBottom panelBottom;
+public class MyCanvasManagenment extends JPanel {
+    PanelTopManagenment panelTop;
+    PanelMidManagenment panelMid;
+    PanelBottomManagenment panelBottom;
 
-    public MyCanvas(PanelTop panelTop, PanelMid panelMid, PanelBottom panelBottom) {
+    public MyCanvasManagenment(PanelTopManagenment panelTop, PanelMidManagenment panelMid, PanelBottomManagenment panelBottom) {
         setLayout(new BorderLayout());
         this.panelTop = panelTop;
         this.panelMid = panelMid;

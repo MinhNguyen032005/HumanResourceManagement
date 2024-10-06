@@ -3,12 +3,11 @@ package view;
 import controller.IController;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
-public class MyMenuBar extends MenuBar {
+public class MyMenuBarManagenment extends MenuBar {
     Menu nhanSu, chamCong, tienLuong, daoTao, tuyenDung, danhGia;
 
-    public MyMenuBar(IController iController) {
+    public MyMenuBarManagenment(IController iController) {
         nhanSu = new Menu("1.Nhân " + "sự");
         chamCong = new Menu("2.chấm" + "công");
         tienLuong = new Menu("3.Tiền lương");
