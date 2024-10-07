@@ -1,0 +1,10 @@
+ID,Họ và Tên,Giớitính,Ngàysinh,Chứcvụ
+1,Nguyễn Văn A,nam,20/10/2000,kế toán
+2,Nguyễn Hoang B,nam,20/10/2000,nhân viên
+3,Nguyễn Phuong C,nữ,20/10/2000,trưởng phòng
+4,Nguyễn Cao D,nam,20/10/2000,nhân viên
+5,Nguyễn Thi E,nữ,20/10/2000,nhân sự
+6,Nguyễn Ha F,nữ,20/10/2000,nhân sự
+7,Nguyễn Quang G,nam,20/10/2000,nhân viên
+8,Nguyễn Thi H,nữ,20/10/2000,kế toán
+

@@ -3,6 +3,7 @@ package controller;
 import view.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -13,8 +14,6 @@ import java.util.Map;
 
 public class Action implements IController {
     MyCanvasManagenment myCanvas;
-    MyFameManagenment myFame;
-    MyMenuBarManagenment menuBar;
     PanelTopManagenment panelTop;
     PanelMidManagenment panelMid;
     PanelBottomManagenment panelBottom;
@@ -22,19 +21,25 @@ public class Action implements IController {
     SignInFrame signInFrame;
     SignInForm signInForm;
     Map<String, String> accounts;
+    CardLayout cardLayout;
+    JPanel cardPanel;
+
 
     public Action() throws Exception {
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
         accounts = new HashMap<>();
         panelTop = new PanelTopManagenment(this);
         panelMid = new PanelMidManagenment(this);
         panelBottom = new PanelBottomManagenment(this);
-        menuBar = new MyMenuBarManagenment(this);
         myCanvas = new MyCanvasManagenment(panelTop, panelMid, panelBottom);
-        siginPanel = new SiginPanel(this);
-        signInForm = new SignInForm(this);
-        new SignInFrame(siginPanel, this);
+        siginPanel = new SiginPanel(this,cardPanel);
+        signInForm = new SignInForm(this,cardPanel);
+        cardPanel.add(siginPanel);
+        cardPanel.add(myCanvas, "truongphong");
+        new SignInFrame(cardPanel, this);
     }
-
+    //chức năng kiểm tra từ file account.txt
     private void loadAccountsFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader("src/data/account.txt"))) {
             String line;
@@ -50,10 +55,7 @@ public class Action implements IController {
 
     }
 
-    public static void main(String[] args) throws Exception {
-        new Action();
-    }
-
+//chức năng chuyển đổi jpanel khi đăng nhập mỗi tài khoản khác nhau
     @Override
     public ActionListener login(JTextField text, JPasswordField password1, IController iController) {
         return new ActionListener() {
@@ -64,10 +66,7 @@ public class Action implements IController {
                     JOptionPane.showMessageDialog(signInFrame, "Đăng nhập thành công!", "Thông Báo", JOptionPane.DEFAULT_OPTION);
                     switch (text.getText()) {
                         case "truongphong": {
-                            myFame = new MyFameManagenment(myCanvas, iController);
-                            myFame.setVisible(true);
-                            myFame.pack();
-                            SwingUtilities.getWindowAncestor(signInFrame).dispose();
+                            cardLayout.show(cardPanel, "truongphong");
                             break;
                         }
                         case "ketoan": {
@@ -87,5 +86,11 @@ public class Action implements IController {
                 }
             }
         };
+    }
+
+
+// test ở đây
+    public static void main(String[] args) throws Exception {
+        new Action();
     }
 }
