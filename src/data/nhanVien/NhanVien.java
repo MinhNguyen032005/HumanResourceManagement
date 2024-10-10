@@ -34,4 +34,15 @@ public class NhanVien {
     public String getPosition() {
         return position;
     }
+
+    @Override
+    public String toString() {
+        return "NhanVien{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", gender='" + gender + '\'' +
+                ", date='" + date + '\'' +
+                ", position='" + position + '\'' +
+                '}';
+    }
 }

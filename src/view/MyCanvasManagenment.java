@@ -4,10 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MyCanvasManagenment extends JPanel {
-    public MyCanvasManagenment(PanelTopManagenment panelTop, PanelMidManagenment panelMid, PanelBottomManagenment panelBottom) {
+    public MyCanvasManagenment(PanelMidManagenment panelMid, PanelBottomManagenment panelBottom, PanelLeftManagenment panelLeftManagenment) {
         setLayout(new BorderLayout());
-        add(panelTop, BorderLayout.NORTH);
-        add(panelMid,BorderLayout.CENTER);
-        add(panelBottom,BorderLayout.SOUTH);
+        add(panelMid, BorderLayout.CENTER);
+        add(panelBottom, BorderLayout.SOUTH);
+        add(panelLeftManagenment, BorderLayout.WEST);
     }
 }

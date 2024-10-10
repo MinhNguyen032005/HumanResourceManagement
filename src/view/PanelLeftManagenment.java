@@ -7,14 +7,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class PanelBottomManagenment extends JPanel {
+public class PanelLeftManagenment extends JPanel {
     JButton btn;
-    public PanelBottomManagenment(IController iController) {
+    ArrayList<JButton> jButtons;
+
+    public PanelLeftManagenment(IController iController) {
+        ArrayList<String> stringButton = new ArrayList<>();
+        stringButton.add("Trang chủ");
+        stringButton.add("Báo cáo");
+        stringButton.add("Thông báo");
+        stringButton.add("Lịch làm việc");
+        stringButton.add("Công việc");
+        stringButton.add("Danh sách NV");
+        stringButton.add("Thông tin lương NV");
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
-        ArrayList<String> stringButton=new ArrayList<>();
-        stringButton.add("<- Đăng xuất");
-        setLayout(new FlowLayout(FlowLayout.LEFT));
+        setBackground(Color.WHITE);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         for (int i = 0; i < stringButton.size(); i++) {
+            this.add(Box.createVerticalStrut(30));
             btn = new JButton(stringButton.get(i));
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             btn.setHorizontalAlignment(SwingConstants.LEFT);
@@ -24,8 +34,8 @@ public class PanelBottomManagenment extends JPanel {
             btn.setFocusable(false);
             btn.setOpaque(false);
             btn.setBorder(null);
-            btn.setSize(50,50);
-            btn.addActionListener(iController.logout());
+            btn.setSize(50, 50);
+            btn.addActionListener(iController.controlButtonLeft());
             this.add(btn);
         }
     }
