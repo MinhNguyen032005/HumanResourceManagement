@@ -1,6 +1,6 @@
 package view;
 
-import controller.IController;
+import controller.IControllerManagenment;
 import utilities.FontLoader;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class PanelBottomManagenment extends JPanel {
     JButton btn;
-    public PanelBottomManagenment(IController iController) {
+    public PanelBottomManagenment(IControllerManagenment iController) {
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         ArrayList<String> stringButton=new ArrayList<>();
         stringButton.add("<- Đăng xuất");

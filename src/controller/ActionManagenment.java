@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class Action implements IController {
+public class ActionManagenment implements IControllerManagenment {
     MyCanvasManagenment myCanvas;
     PanelMidManagenment panelMid;
     PanelBottomManagenment panelBottom;
@@ -33,7 +33,7 @@ public class Action implements IController {
     ArrayList<NhanVien> nhanVienArrayList;
 
 
-    public Action() throws Exception {
+    public ActionManagenment() throws Exception {
         nhanVienListMap = new HashMap<>();
         nhanVienArrayList = new ArrayList<>();
         jPanelStack = new Stack<>();
@@ -73,7 +73,7 @@ public class Action implements IController {
 
     //chức năng chuyển đổi jpanel khi đăng nhập mỗi tài khoản khác nhau
     @Override
-    public ActionListener login(JTextField text, JPasswordField password1, IController iController) {
+    public ActionListener login(JTextField text, JPasswordField password1, IControllerManagenment iController) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -263,7 +263,7 @@ public class Action implements IController {
 
     // test ở đây
     public static void main(String[] args) throws Exception {
-        new Action();
+        new ActionManagenment();
     }
 }
 

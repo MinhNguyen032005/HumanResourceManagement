@@ -1,14 +1,11 @@
 package view;
 
-import controller.IController;
+import controller.IControllerManagenment;
 import data.nhanVien.NhanVien;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PanelServiceMid extends JPanel {
@@ -19,7 +16,7 @@ public class PanelServiceMid extends JPanel {
     JButton back;
     JTextField inputSeach;
 
-    public PanelServiceMid(IController iController) {
+    public PanelServiceMid(IControllerManagenment iController) {
         ArrayList<String> list = new ArrayList<>();
         list.add("Mã nhân viên ");
         list.add("Tên nhân viên");

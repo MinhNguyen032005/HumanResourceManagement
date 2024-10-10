@@ -1,6 +1,6 @@
 package view;
 
-import controller.IController;
+import controller.IControllerManagenment;
 import utilities.CustomLabel;
 import utilities.FontLoader;
 
@@ -18,7 +18,7 @@ public class SignInForm extends JPanel {
     Map<String, String> accounts;
 
 
-    public SignInForm(IController iController, JPanel jPanel) {
+    public SignInForm(IControllerManagenment iController, JPanel jPanel) {
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         Font robotoLight = FontLoader.loadFont("src/storage/font/Roboto-Light.ttf");
         setLayout(new FlowLayout());

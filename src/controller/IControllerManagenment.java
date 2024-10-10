@@ -5,8 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 
-public interface IController {
-    ActionListener login(JTextField text, JPasswordField password, IController iController);
+public interface IControllerManagenment {
+    ActionListener login(JTextField text, JPasswordField password, IControllerManagenment iController);
 
     ActionListener logout();
 

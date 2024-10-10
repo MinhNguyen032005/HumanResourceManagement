@@ -1,6 +1,6 @@
 package view;
 
-import controller.IController;
+import controller.IControllerManagenment;
 import utilities.FontLoader;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ public class PanelLeftManagenment extends JPanel {
     JButton btn;
     ArrayList<JButton> jButtons;
 
-    public PanelLeftManagenment(IController iController) {
+    public PanelLeftManagenment(IControllerManagenment iController) {
         ArrayList<String> stringButton = new ArrayList<>();
         stringButton.add("Trang chủ");
         stringButton.add("Báo cáo");
