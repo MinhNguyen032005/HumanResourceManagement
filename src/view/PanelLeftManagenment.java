@@ -13,9 +13,7 @@ public class PanelLeftManagenment extends JPanel {
 
     public PanelLeftManagenment(IControllerManagenment iController) {
         ArrayList<String> stringButton = new ArrayList<>();
-        stringButton.add("Trang chủ");
         stringButton.add("Báo cáo");
-        stringButton.add("Thông báo");
         stringButton.add("Lịch làm việc");
         stringButton.add("Công việc");
         stringButton.add("Danh sách NV");

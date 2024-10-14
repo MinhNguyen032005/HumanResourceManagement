@@ -1,19 +1,17 @@
 package controller;
 
 import data.nhanVien.NhanVien;
+import utilities.PositionComparator;
+import utilities.WageComparator;
 import view.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.io.*;
+import java.util.*;
+import java.util.List;
 
 public class ActionManagenment implements IControllerManagenment {
     MyCanvasManagenment myCanvas;
@@ -25,32 +23,40 @@ public class ActionManagenment implements IControllerManagenment {
     SiginPanel siginPanel;
     SignInFrame signInFrame;
     SignInForm signInForm;
-    Map<String, String> accounts;
     CardLayout cardLayout;
     JPanel cardPanel;
+    PanelServiceMid.PanelFixEmployee panelFixEmployee;
+    PanelServiceMid.PanelAddEmployee panelAddEmployee;
+    PanelReport panelReport;
     Stack<JPanel> jPanelStack;
     Map<String, NhanVien> nhanVienListMap;
     ArrayList<NhanVien> nhanVienArrayList;
-
+    Map<String, String> accounts;
 
     public ActionManagenment() throws Exception {
-        nhanVienListMap = new HashMap<>();
+        nhanVienListMap = new LinkedHashMap<>();
         nhanVienArrayList = new ArrayList<>();
         jPanelStack = new Stack<>();
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         accounts = new HashMap<>();
+        panelReport = new PanelReport(this);
         panelMid = new PanelMidManagenment(this);
         panelServiceMid = new PanelServiceMid(this);
         panelService = new PanelService(panelServiceMid);
         panelBottom = new PanelBottomManagenment(this);
         panelLeftManagenment = new PanelLeftManagenment(this);
+        panelFixEmployee = new PanelServiceMid.PanelFixEmployee(this);
+        panelAddEmployee = new PanelServiceMid.PanelAddEmployee(this);
         myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
         siginPanel = new SiginPanel(this, cardPanel);
         signInForm = new SignInForm(this, cardPanel);
         cardPanel.add(siginPanel, "login");
         cardPanel.add(myCanvas, "truongphong");
         cardPanel.add(panelService, "DV");
+        cardPanel.add(panelFixEmployee, "FIX");
+        cardPanel.add(panelAddEmployee, "ADD");
+        cardPanel.add(panelReport, "RP");
         jPanelStack.push(siginPanel);
         signInFrame = new SignInFrame(cardPanel, this);
     }
@@ -112,7 +118,7 @@ public class ActionManagenment implements IControllerManagenment {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("<- Đăng xuất")) {
-                    JOptionPane.showMessageDialog(myCanvas, "Bạn có chắc chắn muốn thoát", "Thông Báo", JOptionPane.DEFAULT_OPTION);
+                    JOptionPane.showMessageDialog(myCanvas, "Bạn có chắc chắn muốn thoát", "Thông Báo", JOptionPane.OK_CANCEL_OPTION);
                     goBack();
                 }
             }
@@ -146,16 +152,8 @@ public class ActionManagenment implements IControllerManagenment {
             public void actionPerformed(ActionEvent e) {
                 String string = e.getActionCommand();
                 switch (string) {
-                    case "Trang chủ": {
-
-                        break;
-                    }
                     case "Báo cáo": {
-
-                        break;
-                    }
-                    case "Thông báo": {
-
+                        cardLayout.show(cardPanel, "RP");
                         break;
                     }
                     case "Lịch làm việc": {
@@ -193,10 +191,10 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
-    //hàm để cập nhật các file trong data.txt để add vào danh sách nhân viên
+    //hàm để cập nhật các file trong dataEmployee.txt để add vào danh sách nhân viên
     @Override
     public void loadDataFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/data/data.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/dataEmployee.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
@@ -218,7 +216,8 @@ public class ActionManagenment implements IControllerManagenment {
             tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition()});
         }
     }
-//hàm dùng để tìm kiếm nhân viên bằng cách nhập ID vào để tìm
+
+    //hàm dùng để tìm kiếm nhân viên bằng cách nhập ID vào để tìm
     @Override
     public ActionListener findEmPloyee(JTextField jTextField, DefaultTableModel tableModel) {
         return new ActionListener() {
@@ -229,20 +228,23 @@ public class ActionManagenment implements IControllerManagenment {
             }
         };
     }
-//chức năng của jtextfield để hiện lại bẳng khi không có nhập dữ liệu vào
+
+    //chức năng của jtextfield để hiện lại bẳng khi không có nhập dữ liệu vào
     @Override
     public KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach) {
         return new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                String id=inputSeach.getText();
-                if (id.equals("")){
+                String id = inputSeach.getText();
+                if (id.equals("")) {
                     updateTable(tableModel);
                 }
             }
         };
     }
-//chức năng của button tìm kiếm
+
+
+    //chức năng của button tìm kiếm
     private void searchEmployeeById(String id, DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         loadListEmployee();
@@ -253,10 +255,231 @@ public class ActionManagenment implements IControllerManagenment {
             JOptionPane.showMessageDialog(panelServiceMid, "Không tìm thấy nhân viên!");
         }
     }
-//hàm dùng để put những nhân viên vào trong map có key bằng chính id của nó
+
+    //hàm dùng để put những nhân viên vào trong map có key bằng chính id của nó
     public void loadListEmployee() {
         for (NhanVien nhanVien : nhanVienArrayList) {
             nhanVienListMap.put(nhanVien.getId(), nhanVien);
+        }
+    }
+
+    @Override
+    public ActionListener fixInformationEmployee(JTextField inputSeach, JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = inputSeach.getText();
+                String newName = inputName.getText();
+                String newGender = inputGender.getText();
+                String newDate = inputDate.getText();
+                String newPosition = inputPosition.getText();
+
+                updateEmployee(id, newName, newGender, newDate, newPosition, tableModel);
+            }
+        };
+    }
+
+    private void updateEmployee(String id, String newName, String newGender, String newDate, String newPosition, DefaultTableModel tableModel) {
+        NhanVien nhanVien = nhanVienListMap.get(id);
+        if (nhanVien != null) {
+            nhanVien.setName(newName);
+            nhanVien.setGender(newGender);
+            nhanVien.setDate(newDate);
+            nhanVien.setPosition(newPosition);
+            nhanVienListMap.put(id, nhanVien);
+            updateTable(tableModel);
+            JOptionPane.showMessageDialog(panelServiceMid, "Sửa thông tin thành công!");
+            cardLayout.show(cardPanel, "DV");
+        } else {
+            JOptionPane.showMessageDialog(panelServiceMid, "Không tìm thấy nhân viên với ID này!");
+            cardLayout.show(cardPanel, "DV");
+        }
+    }
+
+    @Override
+    public ActionListener controlButtonEmployee(JTextField inputSeach, DefaultTableModel tableModel) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String string = e.getActionCommand();
+                switch (string) {
+                    case "Thêm": {
+                        cardLayout.show(cardPanel, "ADD");
+                        break;
+                    }
+                    case "Sửa": {
+                        cardLayout.show(cardPanel, "FIX");
+                        break;
+                    }
+                    case "Xóa": {
+                        deleteEmployee(inputSeach, tableModel);
+                        break;
+                    }
+                }
+            }
+        };
+    }
+
+    @Override
+    public ActionListener addEmployee(JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = inputName.getText();
+                String gender = inputGender.getText();
+                String date = inputDate.getText();
+                String position = inputPosition.getText();
+                updateAddEmployee(name, gender, date, position, tableModel);
+            }
+        };
+    }
+
+    private void updateAddEmployee(String name, String gender, String date, String position, DefaultTableModel tableModel) {
+        String idEmployee = idEmployee();
+        NhanVien nhanVien = new NhanVien(null, null, null, null, null);
+        if (nhanVien != null) {
+            nhanVien.setName(name);
+            nhanVien.setGender(gender);
+            nhanVien.setDate(date);
+            nhanVien.setPosition(position);
+            nhanVienListMap.put(idEmployee, nhanVien);
+            updateTable2(idEmployee, tableModel, name, gender, date, position);
+            JOptionPane.showMessageDialog(panelServiceMid, "Thêm thành công!");
+            cardLayout.show(cardPanel, "DV");
+        } else {
+            JOptionPane.showMessageDialog(panelServiceMid, "Không thêm Nhân viên được!");
+            cardLayout.show(cardPanel, "DV");
+        }
+    }
+
+    private void updateTable2(String id, DefaultTableModel tableModel, String name, String gender, String date, String position) {
+        tableModel.addRow(new Object[]{id, name, gender, date, position});
+    }
+
+    private String idEmployee() {
+        loadListEmployee();
+        int idMax = 0;
+        System.out.println(nhanVienListMap.size());
+        idMax = nhanVienListMap.size();
+        idMax++;
+        return Integer.toString(idMax);
+    }
+
+    private void deleteEmployee(JTextField inputSeach, DefaultTableModel tableModel) {
+        String id = inputSeach.getText();
+        NhanVien nhanVien = nhanVienListMap.get(id);
+        if (nhanVien != null) {
+            nhanVienListMap.remove(id);
+            updateTable1(tableModel);
+            JOptionPane.showMessageDialog(panelServiceMid, "Xóa nhân viên thành công!");
+        } else {
+            JOptionPane.showMessageDialog(panelServiceMid, "Không tìm thấy nhân viên với ID này!");
+        }
+    }
+
+    private void updateTable1(DefaultTableModel tableModel) {
+        tableModel.setRowCount(0);
+        List<NhanVien> list = new ArrayList<>(nhanVienListMap.values());
+        for (NhanVien nhanVien1 : list) {
+            tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition()});
+        }
+        list.sort(Comparator.comparing(NhanVien::getId));
+    }
+
+    public void xuatBaoCaoTXT() {
+        loadDataTableReport();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn nơi lưu file báo cáo .txt");
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            if (!fileToSave.getAbsolutePath().endsWith(".txt")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".txt");
+            }
+            try (FileWriter writer = new FileWriter(fileToSave)) {
+                writer.write("Mã NV\tHọ và Tên\tChức Vụ\tLương\n"); // Header
+                for (NhanVien nv : nhanVienArrayList) {
+                    writer.write(nv.getId() + "\t" + nv.getName() + "\t" + nv.getPosition() + "\t\t" + nv.getWage() + "\n");
+                }
+                JOptionPane.showMessageDialog(null, "Xuất báo cáo ra file .txt thành công!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateTable3(DefaultTableModel tableModel) {
+        tableModel.setRowCount(0);
+        nhanVienArrayList.clear();
+        loadDataTableReport();
+        for (NhanVien nhanVien1 : nhanVienArrayList) {
+            tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition(), nhanVien1.getWage()});
+        }
+    }
+
+    public void loadDataTableReport() {
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/dataReport.txt "))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 6) {
+                    NhanVien nhanVien = new NhanVien(data[0], data[1], data[2], data[3], data[4], Double.parseDouble(data[5]));
+                    nhanVienArrayList.add(nhanVien);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ActionListener controlReport(DefaultTableModel tableModel) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String string = e.getActionCommand();
+                switch (string) {
+                    case "Export": {
+                        xuatBaoCaoTXT();
+                        break;
+                    }
+                    case "Mức lương": {
+                        updateTableWage(tableModel);
+                        break;
+                    }
+                    case "Chức vụ": {
+                        updateTablePosition(tableModel);
+                        break;
+                    }
+                }
+            }
+        };
+    }
+    private void sortPosition(){
+        nhanVienArrayList.clear();
+        loadDataTableReport();
+        Collections.sort(nhanVienArrayList,new PositionComparator());
+    }
+
+    private void updateTablePosition(DefaultTableModel tableModel) {
+        tableModel.setRowCount(0);
+        sortPosition();
+        for (NhanVien nhanVien1: nhanVienArrayList){
+            tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition(), nhanVien1.getWage()});
+        }
+    }
+
+    private void sortWage() {
+        nhanVienArrayList.clear();
+        loadDataTableReport();
+        Collections.sort(nhanVienArrayList, new WageComparator());
+    }
+
+    public void updateTableWage(DefaultTableModel tableModel) {
+        tableModel.setRowCount(0);
+        sortWage();
+        for (NhanVien nhanVien1 : nhanVienArrayList) {
+            tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition(), nhanVien1.getWage()});
         }
     }
 

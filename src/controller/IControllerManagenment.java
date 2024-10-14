@@ -21,4 +21,18 @@ public interface IControllerManagenment {
     ActionListener findEmPloyee(JTextField jTextField, DefaultTableModel tableModel);
 
     KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach);
+
+    ActionListener fixInformationEmployee(JTextField inputSeach, JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel);
+
+
+    ActionListener controlButtonEmployee(JTextField inputSeach, DefaultTableModel tableModel);
+
+    ActionListener addEmployee(JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel);
+
+
+    void updateTable3(DefaultTableModel tableModel);
+
+    void loadDataTableReport();
+
+    ActionListener controlReport(DefaultTableModel tableModel);
 }
