@@ -14,10 +14,10 @@ public class PanelLeftManagenment extends JPanel {
     public PanelLeftManagenment(IControllerManagenment iController) {
         ArrayList<String> stringButton = new ArrayList<>();
         stringButton.add("Báo cáo");
-        stringButton.add("Lịch làm việc");
-        stringButton.add("Công việc");
         stringButton.add("Danh sách NV");
-        stringButton.add("Thông tin lương NV");
+        stringButton.add("Công việc");
+        stringButton.add("Nhận xét");
+        stringButton.add("Nghỉ phép");
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

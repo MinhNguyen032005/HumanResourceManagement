@@ -34,7 +34,6 @@ public class PanelServiceMid extends JPanel {
         setBackground(new Color(197, 197, 197));
         tableModel = new DefaultTableModel(list.toArray(), 0);
         table = new JTable(tableModel);
-        iController.loadDataFromFile();
         iController.updateTable(tableModel);
         setLayout(new BorderLayout());
         JPanel jPanel = new JPanel();

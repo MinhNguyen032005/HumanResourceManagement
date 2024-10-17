@@ -28,6 +28,8 @@ public class ActionManagenment implements IControllerManagenment {
     PanelServiceMid.PanelFixEmployee panelFixEmployee;
     PanelServiceMid.PanelAddEmployee panelAddEmployee;
     PanelReport panelReport;
+    PanelWorkManagenment panelWorkManagenment;
+    PanelWorkManagenment.PanelWork panelWork;
     Stack<JPanel> jPanelStack;
     Map<String, NhanVien> nhanVienListMap;
     ArrayList<NhanVien> nhanVienArrayList;
@@ -40,6 +42,8 @@ public class ActionManagenment implements IControllerManagenment {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         accounts = new HashMap<>();
+        panelWork=new PanelWorkManagenment.PanelWork();
+        panelWorkManagenment=new PanelWorkManagenment(panelWork,this);
         panelReport = new PanelReport(this);
         panelMid = new PanelMidManagenment(this);
         panelServiceMid = new PanelServiceMid(this);
@@ -57,6 +61,7 @@ public class ActionManagenment implements IControllerManagenment {
         cardPanel.add(panelFixEmployee, "FIX");
         cardPanel.add(panelAddEmployee, "ADD");
         cardPanel.add(panelReport, "RP");
+        cardPanel.add(panelWorkManagenment,"CV");
         jPanelStack.push(siginPanel);
         signInFrame = new SignInFrame(cardPanel, this);
     }
@@ -154,6 +159,7 @@ public class ActionManagenment implements IControllerManagenment {
                 switch (string) {
                     case "Báo cáo": {
                         cardLayout.show(cardPanel, "RP");
+                        jPanelStack.push(myCanvas);
                         break;
                     }
                     case "Lịch làm việc": {
@@ -161,7 +167,8 @@ public class ActionManagenment implements IControllerManagenment {
                         break;
                     }
                     case "Công việc": {
-
+                        cardLayout.show(cardPanel,"CV");
+                        jPanelStack.push(myCanvas);
                         break;
                     }
                     case "Danh sách NV": {
@@ -185,6 +192,7 @@ public class ActionManagenment implements IControllerManagenment {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("<- Back")) {
+
                     goBack();
                 }
             }
@@ -242,7 +250,6 @@ public class ActionManagenment implements IControllerManagenment {
             }
         };
     }
-
 
     //chức năng của button tìm kiếm
     private void searchEmployeeById(String id, DefaultTableModel tableModel) {
@@ -455,16 +462,17 @@ public class ActionManagenment implements IControllerManagenment {
             }
         };
     }
-    private void sortPosition(){
+
+    private void sortPosition() {
         nhanVienArrayList.clear();
         loadDataTableReport();
-        Collections.sort(nhanVienArrayList,new PositionComparator());
+        Collections.sort(nhanVienArrayList, new PositionComparator());
     }
 
     private void updateTablePosition(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         sortPosition();
-        for (NhanVien nhanVien1: nhanVienArrayList){
+        for (NhanVien nhanVien1 : nhanVienArrayList) {
             tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition(), nhanVien1.getWage()});
         }
     }
