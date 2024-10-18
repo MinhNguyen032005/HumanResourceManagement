@@ -30,6 +30,8 @@ public class ActionManagenment implements IControllerManagenment {
     PanelReport panelReport;
     PanelWorkManagenment panelWorkManagenment;
     PanelWorkManagenment.PanelWork panelWork;
+    PanelLeave panelLeave;
+    PanelLeave.Panel panel;
     Stack<JPanel> jPanelStack;
     Map<String, NhanVien> nhanVienListMap;
     ArrayList<NhanVien> nhanVienArrayList;
@@ -42,8 +44,10 @@ public class ActionManagenment implements IControllerManagenment {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         accounts = new HashMap<>();
-        panelWork=new PanelWorkManagenment.PanelWork();
-        panelWorkManagenment=new PanelWorkManagenment(panelWork,this);
+        panel=new PanelLeave.Panel();
+        panelLeave=new PanelLeave(this);
+        panelWork = new PanelWorkManagenment.PanelWork();
+        panelWorkManagenment = new PanelWorkManagenment(panelWork, this);
         panelReport = new PanelReport(this);
         panelMid = new PanelMidManagenment(this);
         panelServiceMid = new PanelServiceMid(this);
@@ -61,7 +65,8 @@ public class ActionManagenment implements IControllerManagenment {
         cardPanel.add(panelFixEmployee, "FIX");
         cardPanel.add(panelAddEmployee, "ADD");
         cardPanel.add(panelReport, "RP");
-        cardPanel.add(panelWorkManagenment,"CV");
+        cardPanel.add(panelWorkManagenment, "CV");
+        cardPanel.add(panelLeave,"LV");
         jPanelStack.push(siginPanel);
         signInFrame = new SignInFrame(cardPanel, this);
     }
@@ -123,8 +128,12 @@ public class ActionManagenment implements IControllerManagenment {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("<- Đăng xuất")) {
-                    JOptionPane.showMessageDialog(myCanvas, "Bạn có chắc chắn muốn thoát", "Thông Báo", JOptionPane.OK_CANCEL_OPTION);
-                    goBack();
+                    int result = JOptionPane.showConfirmDialog(myCanvas, "Bạn có chắc chắn muốn thoát", "Thông Báo", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if(result == JOptionPane.YES_OPTION){
+                        goBack();
+                    }else {
+                        cardLayout.show(cardPanel,"truongphong");
+                    }
                 }
             }
         };
@@ -162,12 +171,13 @@ public class ActionManagenment implements IControllerManagenment {
                         jPanelStack.push(myCanvas);
                         break;
                     }
-                    case "Lịch làm việc": {
-
+                    case "Nghỉ phép": {
+                        cardLayout.show(cardPanel,"LV");
+                        jPanelStack.push(myCanvas);
                         break;
                     }
                     case "Công việc": {
-                        cardLayout.show(cardPanel,"CV");
+                        cardLayout.show(cardPanel, "CV");
                         jPanelStack.push(myCanvas);
                         break;
                     }
@@ -176,7 +186,7 @@ public class ActionManagenment implements IControllerManagenment {
                         jPanelStack.push(myCanvas);
                         break;
                     }
-                    case "Thông tin lương NV": {
+                    case "Nhận xét": {
 
                         break;
                     }
@@ -202,11 +212,11 @@ public class ActionManagenment implements IControllerManagenment {
     //hàm để cập nhật các file trong dataEmployee.txt để add vào danh sách nhân viên
     @Override
     public void loadDataFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/data/dataEmployee.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/dataReport.txt "))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 5) {
+                if (data.length == 6) {
                     NhanVien nhanVien = new NhanVien(data[0], data[1], data[2], data[3], data[4]);
                     nhanVienArrayList.add(nhanVien);
                 }
@@ -463,6 +473,7 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
+
     private void sortPosition() {
         nhanVienArrayList.clear();
         loadDataTableReport();
@@ -491,6 +502,15 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+    @Override
+    public ActionListener find(JTextField jTextField) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        };
+    }
 
     // test ở đây
     public static void main(String[] args) throws Exception {

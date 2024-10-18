@@ -35,4 +35,7 @@ public interface IControllerManagenment {
     void loadDataTableReport();
 
     ActionListener controlReport(DefaultTableModel tableModel);
+
+
+    ActionListener find(JTextField jTextField);
 }
