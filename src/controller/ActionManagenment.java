@@ -1,9 +1,18 @@
 package controller;
 
+import data.chamCong.ChamCong;
+import data.nghiPhep.NghiPhep;
 import data.nhanVien.NhanVien;
 import utilities.PositionComparator;
 import utilities.WageComparator;
 import view.*;
+import controller.IControllerManagenment;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -31,21 +40,29 @@ public class ActionManagenment implements IControllerManagenment {
     PanelWorkManagenment panelWorkManagenment;
     PanelWorkManagenment.PanelWork panelWork;
     PanelLeave panelLeave;
-    PanelLeave.Panel panel;
+    LeaveListPanel leaveListPanel;
+    PanelTimeKeepingMid panelTimeKeepingMid;
+    PanelTimeKeeping panelTimeKeeping;
     Stack<JPanel> jPanelStack;
     Map<String, NhanVien> nhanVienListMap;
     ArrayList<NhanVien> nhanVienArrayList;
     Map<String, String> accounts;
+    ArrayList<ChamCong> chamCongs;
+    Set<NghiPhep> nghiPheps;
 
     public ActionManagenment() throws Exception {
+        nghiPheps = new HashSet<>();
+        chamCongs = new ArrayList<>();
         nhanVienListMap = new LinkedHashMap<>();
         nhanVienArrayList = new ArrayList<>();
         jPanelStack = new Stack<>();
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         accounts = new HashMap<>();
-        panel=new PanelLeave.Panel();
-        panelLeave=new PanelLeave(this);
+        panelTimeKeepingMid = new PanelTimeKeepingMid(this);
+        panelTimeKeeping = new PanelTimeKeeping(this, panelTimeKeepingMid);
+        leaveListPanel = new LeaveListPanel(nghiPheps);
+        panelLeave = new PanelLeave(this, nghiPheps);
         panelWork = new PanelWorkManagenment.PanelWork();
         panelWorkManagenment = new PanelWorkManagenment(panelWork, this);
         panelReport = new PanelReport(this);
@@ -66,7 +83,8 @@ public class ActionManagenment implements IControllerManagenment {
         cardPanel.add(panelAddEmployee, "ADD");
         cardPanel.add(panelReport, "RP");
         cardPanel.add(panelWorkManagenment, "CV");
-        cardPanel.add(panelLeave,"LV");
+        cardPanel.add(panelLeave, "LV");
+        cardPanel.add(panelTimeKeeping, "TK");
         jPanelStack.push(siginPanel);
         signInFrame = new SignInFrame(cardPanel, this);
     }
@@ -129,10 +147,10 @@ public class ActionManagenment implements IControllerManagenment {
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("<- Đăng xuất")) {
                     int result = JOptionPane.showConfirmDialog(myCanvas, "Bạn có chắc chắn muốn thoát", "Thông Báo", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    if(result == JOptionPane.YES_OPTION){
+                    if (result == JOptionPane.YES_OPTION) {
                         goBack();
-                    }else {
-                        cardLayout.show(cardPanel,"truongphong");
+                    } else {
+                        cardLayout.show(cardPanel, "truongphong");
                     }
                 }
             }
@@ -172,7 +190,7 @@ public class ActionManagenment implements IControllerManagenment {
                         break;
                     }
                     case "Nghỉ phép": {
-                        cardLayout.show(cardPanel,"LV");
+                        cardLayout.show(cardPanel, "LV");
                         jPanelStack.push(myCanvas);
                         break;
                     }
@@ -186,8 +204,9 @@ public class ActionManagenment implements IControllerManagenment {
                         jPanelStack.push(myCanvas);
                         break;
                     }
-                    case "Nhận xét": {
-
+                    case "Chấm công": {
+                        cardLayout.show(cardPanel, "TK");
+                        jPanelStack.push(myCanvas);
                         break;
                     }
                 }
@@ -202,7 +221,6 @@ public class ActionManagenment implements IControllerManagenment {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("<- Back")) {
-
                     goBack();
                 }
             }
@@ -229,10 +247,12 @@ public class ActionManagenment implements IControllerManagenment {
     //hàm để add danh sách nhân viên vào bảng
     @Override
     public void updateTable(DefaultTableModel tableModel) {
+        loadListEmployee();
         tableModel.setRowCount(0);
-        for (NhanVien nhanVien1 : nhanVienArrayList) {
+        for (NhanVien nhanVien1 : nhanVienListMap.values()) {
             tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition()});
         }
+
     }
 
     //hàm dùng để tìm kiếm nhân viên bằng cách nhập ID vào để tìm
@@ -241,8 +261,7 @@ public class ActionManagenment implements IControllerManagenment {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String id = jTextField.getText();
-                searchEmployeeById(id, tableModel);
+                searchEmployeeById(jTextField, tableModel);
             }
         };
     }
@@ -262,14 +281,18 @@ public class ActionManagenment implements IControllerManagenment {
     }
 
     //chức năng của button tìm kiếm
-    private void searchEmployeeById(String id, DefaultTableModel tableModel) {
+    private void searchEmployeeById(JTextField jTextField, DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         loadListEmployee();
-        NhanVien nhanVien = nhanVienListMap.get(id);
-        if (nhanVien != null) {
+        ArrayList<NhanVien> list = new ArrayList<>();
+        for (NhanVien nhanVien1 : nhanVienListMap.values()) {
+            if (nhanVien1.getName().toLowerCase().contains(jTextField.getText().toLowerCase()) ||
+                    nhanVien1.getId().toLowerCase().contains(jTextField.getText().toLowerCase())) {
+                list.add(nhanVien1);
+            }
+        }
+        for (NhanVien nhanVien : list) {
             tableModel.addRow(new Object[]{nhanVien.getId(), nhanVien.getName(), nhanVien.getGender(), nhanVien.getDate(), nhanVien.getPosition()});
-        } else {
-            JOptionPane.showMessageDialog(panelServiceMid, "Không tìm thấy nhân viên!");
         }
     }
 
@@ -353,24 +376,11 @@ public class ActionManagenment implements IControllerManagenment {
 
     private void updateAddEmployee(String name, String gender, String date, String position, DefaultTableModel tableModel) {
         String idEmployee = idEmployee();
-        NhanVien nhanVien = new NhanVien(null, null, null, null, null);
-        if (nhanVien != null) {
-            nhanVien.setName(name);
-            nhanVien.setGender(gender);
-            nhanVien.setDate(date);
-            nhanVien.setPosition(position);
-            nhanVienListMap.put(idEmployee, nhanVien);
-            updateTable2(idEmployee, tableModel, name, gender, date, position);
-            JOptionPane.showMessageDialog(panelServiceMid, "Thêm thành công!");
-            cardLayout.show(cardPanel, "DV");
-        } else {
-            JOptionPane.showMessageDialog(panelServiceMid, "Không thêm Nhân viên được!");
-            cardLayout.show(cardPanel, "DV");
-        }
-    }
-
-    private void updateTable2(String id, DefaultTableModel tableModel, String name, String gender, String date, String position) {
-        tableModel.addRow(new Object[]{id, name, gender, date, position});
+        NhanVien nhanVien = new NhanVien(idEmployee, name, gender, date, position);
+        nhanVienListMap.put(idEmployee, nhanVien);
+        updateTable(tableModel);
+        JOptionPane.showMessageDialog(panelServiceMid, "Thêm thành công!");
+        cardLayout.show(cardPanel, "DV");
     }
 
     private String idEmployee() {
@@ -387,20 +397,11 @@ public class ActionManagenment implements IControllerManagenment {
         NhanVien nhanVien = nhanVienListMap.get(id);
         if (nhanVien != null) {
             nhanVienListMap.remove(id);
-            updateTable1(tableModel);
+            updateTable(tableModel);
             JOptionPane.showMessageDialog(panelServiceMid, "Xóa nhân viên thành công!");
         } else {
             JOptionPane.showMessageDialog(panelServiceMid, "Không tìm thấy nhân viên với ID này!");
         }
-    }
-
-    private void updateTable1(DefaultTableModel tableModel) {
-        tableModel.setRowCount(0);
-        List<NhanVien> list = new ArrayList<>(nhanVienListMap.values());
-        for (NhanVien nhanVien1 : list) {
-            tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition()});
-        }
-        list.sort(Comparator.comparing(NhanVien::getId));
     }
 
     public void xuatBaoCaoTXT() {
@@ -439,13 +440,43 @@ public class ActionManagenment implements IControllerManagenment {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 6) {
-                    NhanVien nhanVien = new NhanVien(data[0], data[1], data[2], data[3], data[4], Double.parseDouble(data[5]));
+                if (data.length == 5 ) {
+                    NhanVien nhanVien = new NhanVien(data[0], data[1], data[2], data[3], data[4], 0);
+                    nhanVien.setWage(Math.round(calculateIndividualSalary(nhanVien)));
                     nhanVienArrayList.add(nhanVien);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    private double wageEmployee(NhanVien nhanVien) {
+        return nhanVien.wage();  // Tính lương cơ bản cho từng nhân viên
+    }
+    private double calculateIndividualSalary(NhanVien nhanVien) {
+        double salary = wageEmployee(nhanVien);  // Lương cơ bản của nhân viên
+        boolean hasLeave = false;
+        boolean hasAttendance = false;
+
+        for (NghiPhep nghiPhep : nghiPheps) {
+            if (nhanVien.getId().equals(nghiPhep.getId())) {
+                hasLeave = true;  // Nhân viên có nghỉ phép
+                break;
+            }
+        }
+
+        for (ChamCong chamCong : chamCongs) {
+            if (nhanVien.getId().equals(chamCong.getId())) {
+                hasAttendance = true;  // Nhân viên có chấm công
+                break;
+            }
+        }
+        if (hasLeave && hasAttendance) {
+            return salary * (1 - 0.2);  // Giảm 20% lương khi có nghỉ phép và chấm công
+        } else if (!hasLeave && hasAttendance) {
+            return salary * (1 - 0.5);  // Giảm 50% lương khi không nghỉ phép nhưng có chấm công
+        } else {
+            return salary * (1 - 0.8);  // Giảm 80% lương khi không nghỉ phép và không chấm công
         }
     }
 
@@ -502,15 +533,107 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+
     @Override
-    public ActionListener find(JTextField jTextField) {
+    public ActionListener controlButtonTimeKeeping(JTextField inputSeach, DefaultTableModel tableModel, JTable table) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                String string = e.getActionCommand();
+                switch (string) {
+                    case "Thống kê": {
+                        createAndDisplayChart(tableModel);
+                        break;
+                    }
+                    case "Tìm kiếm": {
+                        findTimeKeeping(inputSeach, tableModel, table);
+                        break;
+                    }
+                }
             }
         };
     }
+
+    private void createAndDisplayChart(DefaultTableModel tableModel) {
+        chamCongs.clear();
+        JPanel chartPanelContainer = new JPanel();
+        chartPanelContainer.setLayout(new BorderLayout());
+        CategoryDataset dataset = createDataset();
+        JFreeChart chart = createChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(800, 400));
+        chartPanelContainer.add(chartPanel, BorderLayout.CENTER);
+        JOptionPane.showMessageDialog(panelTimeKeeping, chartPanelContainer, "Biểu đồ chấm công", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private CategoryDataset createDataset() {
+        loadDataTimeKeeping();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (ChamCong chamCong : chamCongs) {
+            dataset.addValue(chamCong.getTimeWork(), "Giờ làm", chamCong.getName());
+        }
+        return dataset;
+    }
+
+    private JFreeChart createChart(CategoryDataset dataset) {
+        return ChartFactory.createBarChart(
+                "Biểu đồ chấm công nhân viên",
+                "Nhân viên",
+                "Giờ làm",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true, true, false);
+    }
+
+    public void findTimeKeeping(JTextField inputSeach, DefaultTableModel tableModel, JTable table) {
+        ArrayList<ChamCong> list = new ArrayList<>();
+        list.clear();
+        for (ChamCong chamCong : chamCongs) {
+            if (chamCong.getName().toLowerCase().contains(inputSeach.getText().toLowerCase()) ||
+                    chamCong.getId().toLowerCase().contains(inputSeach.getText().toLowerCase())) {
+                list.add(chamCong);
+            }
+        }
+        updateTableTimeKeeping1(tableModel, list);
+        table.revalidate();
+        table.repaint();
+    }
+
+    public void updateTableTimeKeeping1(DefaultTableModel tableModel, ArrayList<ChamCong> list) {
+        tableModel.setRowCount(0);
+        for (ChamCong chamCong : list) {
+            tableModel.addRow(new Object[]{chamCong.getId(), chamCong.getName(), chamCong.getDate(), chamCong.getRank(), chamCong.getInTime(), chamCong.getOutTime(), chamCong.getTimeWork(), chamCong.getLate()});
+        }
+        list.clear();
+
+    }
+
+    @Override
+    public void updateTableTimeKeeping(DefaultTableModel tableModel) {
+        tableModel.setRowCount(0);
+        loadDataTimeKeeping();
+        for (ChamCong chamCong : chamCongs) {
+            tableModel.addRow(new Object[]{chamCong.getId(), chamCong.getName(), chamCong.getDate(), chamCong.getRank(), chamCong.getInTime(), chamCong.getOutTime(), chamCong.getTimeWork(), chamCong.getLate()});
+        }
+        chamCongs.clear();
+
+    }
+
+    private void loadDataTimeKeeping() {
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/TimeKeeping.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 8) {
+                    ChamCong chamCong = new ChamCong(data[0], data[1], data[2], data[3], data[4], data[5], Integer.parseInt(data[6]), Integer.parseInt(data[7]));
+                    chamCongs.add(chamCong);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // test ở đây
     public static void main(String[] args) throws Exception {

@@ -1,22 +1,20 @@
-7, Nguyen Van E, Frontend Developer, Nghỉ phép năm, 2024-10-15
-19, Le Thi N, HR Manager, Nghỉ gấp do gia đình, 2024-10-10
-5, Tran Thi P, Data Analyst, Công tác, 2024-10-07
-2, Nguyen Van A, Scrum Master, Nghỉ thai sản, 2024-10-04
-16, Hoang Van Q, Software Architect, Nghỉ phép cá nhân, 2024-10-13
-3, Pham Van M, QA Engineer, Nghỉ ốm, 2024-10-17
-14, Le Van G, Product Owner, Nghỉ mát, 2024-10-09
-8, Tran Van K, Database Administrator, Nghỉ phép năm, 2024-10-01
-11, Nguyen Thi R, DevOps, Nghỉ ốm, 2024-10-06
-1, Hoang Thi F, Designer, Nghỉ phép cá nhân, 2024-10-18
-12, Pham Thi L, Security Analyst, Công tác, 2024-10-08
-4, Le Thi J, IT Support, Nghỉ phép năm, 2024-10-12
-9, Nguyen Van C, Backend Developer, Nghỉ mát, 2024-10-03
-17, Pham Van S, Marketing Manager, Nghỉ gấp do gia đình, 2024-10-05
-6, Le Van O, Sales Executive, Nghỉ thai sản, 2024-10-11
-10, Hoang Thi D, System Administrator, Nghỉ ốm, 2024-10-16
-13, Nguyen Thi T, Developer, Nghỉ phép cá nhân, 2024-10-19
-20, Tran Van I, HR Specialist, Nghỉ phép năm, 2024-10-20
-18, Pham Thi B, Project Manager, Nghỉ mát, 2024-10-02
-15, Le Van H, Security Analyst, Công tác, 2024-10-14
-15, Le Van H, Security Analyst, Công tác, 2024-10-14
-15, Le Van H, Security Analyst, Công tác, 2024-10-14
+7, Vu Van G, Frontend Developer, Nghỉ phép năm, 2024-10-15
+19, Vu Van T, HR Manager, Nghỉ gấp do gia đình, 2024-10-10
+5, Hoang Van E, Data Analyst, Công tác, 2024-10-07
+2, Tran Thi B, Scrum Master, Nghỉ thai sản, 2024-10-04
+16,Pham Thi Q, Software Architect, Nghỉ phép cá nhân, 2024-10-13
+3, Le Van C, QA Engineer, Nghỉ ốm, 2024-10-17
+14,Tran Thi O, Product Owner, Nghỉ mát, 2024-10-09
+8,Ngo Thi H, Database Administrator, Nghỉ phép năm, 2024-10-01
+11, Ha Van L, DevOps, Nghỉ ốm, 2024-10-06
+1, Nguyen Van A, Designer, Nghỉ phép cá nhân, 2024-10-18
+12,Dang Thi M, Security Analyst, Công tác, 2024-10-08
+4, Pham Thi D, IT Support, Nghỉ phép năm, 2024-10-12
+9, Bui Van I, Backend Developer, Nghỉ mát, 2024-10-03
+17, Hoang Van R, Marketing Manager, Nghỉ gấp do gia đình, 2024-10-05
+6, Do Thi F, Sales Executive, Nghỉ thai sản, 2024-10-11
+10, Phan Thi K, System Administrator, Nghỉ ốm, 2024-10-16
+13, Nguyen Van N, Developer, Nghỉ phép cá nhân, 2024-10-19
+20,Ngo Thi U, HR Specialist, Nghỉ phép năm, 2024-10-20
+18, Do Thi S, Project Manager, Nghỉ mát, 2024-10-02
+15, Le Van P, Security Analyst, Công tác, 2024-10-14

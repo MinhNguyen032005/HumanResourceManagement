@@ -16,7 +16,7 @@ public class PanelLeftManagenment extends JPanel {
         stringButton.add("Báo cáo");
         stringButton.add("Danh sách NV");
         stringButton.add("Công việc");
-        stringButton.add("Nhận xét");
+        stringButton.add("Chấm công");
         stringButton.add("Nghỉ phép");
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         setBackground(Color.WHITE);

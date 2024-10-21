@@ -36,6 +36,8 @@ public interface IControllerManagenment {
 
     ActionListener controlReport(DefaultTableModel tableModel);
 
+    ActionListener controlButtonTimeKeeping(JTextField inputSeach, DefaultTableModel tableModel,JTable table);
 
-    ActionListener find(JTextField jTextField);
+
+    void updateTableTimeKeeping(DefaultTableModel tableModel);
 }

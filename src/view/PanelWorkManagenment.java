@@ -80,7 +80,7 @@ public class PanelWorkManagenment extends JPanel {
     }
 
     public static void loadDataWork() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/data/WorkSchedule.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/workSchedule.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");

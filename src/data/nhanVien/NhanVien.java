@@ -72,16 +72,17 @@ public class NhanVien {
         return wage;
     }
 
-    @Override
-    public String toString() {
-        return "NhanVien{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", gender='" + gender + '\'' +
-                ", date='" + date + '\'' +
-                ", position='" + position + '\'' +
-                '}';
+    public void setWage(double wage) {
+        this.wage = wage;
     }
 
-
+    public double wage() {
+        if (position.equals("Ky su")){
+            return 15000;
+        } else if (position.equals("Ke toan")) {
+            return 10000;
+        }else {
+            return 30000;
+        }
+    }
 }
