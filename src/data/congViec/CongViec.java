@@ -2,6 +2,7 @@ package data.congViec;
 
 import java.util.Comparator;
 
+ //đây là lớp dùng để định nghĩa chức năng công việc
 public class CongViec{
     private String title;
     private String deception;

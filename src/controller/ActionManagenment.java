@@ -227,23 +227,6 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
-    //hàm để cập nhật các file trong dataEmployee.txt để add vào danh sách nhân viên
-    @Override
-    public void loadDataFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/data/dataReport.txt "))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 6) {
-                    NhanVien nhanVien = new NhanVien(data[0], data[1], data[2], data[3], data[4]);
-                    nhanVienArrayList.add(nhanVien);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     //hàm để add danh sách nhân viên vào bảng
     @Override
     public void updateTable(DefaultTableModel tableModel) {
@@ -274,7 +257,7 @@ public class ActionManagenment implements IControllerManagenment {
             public void keyTyped(KeyEvent e) {
                 String id = inputSeach.getText();
                 if (id.equals("")) {
-                    updateTable(tableModel);
+                    updateTableListEmployeee(tableModel);
                 }
             }
         };
@@ -283,7 +266,6 @@ public class ActionManagenment implements IControllerManagenment {
     //chức năng của button tìm kiếm
     private void searchEmployeeById(JTextField jTextField, DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
-        loadListEmployee();
         ArrayList<NhanVien> list = new ArrayList<>();
         for (NhanVien nhanVien1 : nhanVienListMap.values()) {
             if (nhanVien1.getName().toLowerCase().contains(jTextField.getText().toLowerCase()) ||
@@ -303,6 +285,7 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+    //chức năng sửa thông tin nhân viên
     @Override
     public ActionListener fixInformationEmployee(JTextField inputSeach, JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel) {
         return new ActionListener() {
@@ -319,6 +302,7 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
+    //phương thức dùng để cập nhật thông tin của nhân viên lên bảng hiện thị từ lúc đầu
     private void updateEmployee(String id, String newName, String newGender, String newDate, String newPosition, DefaultTableModel tableModel) {
         NhanVien nhanVien = nhanVienListMap.get(id);
         if (nhanVien != null) {
@@ -327,7 +311,7 @@ public class ActionManagenment implements IControllerManagenment {
             nhanVien.setDate(newDate);
             nhanVien.setPosition(newPosition);
             nhanVienListMap.put(id, nhanVien);
-            updateTable(tableModel);
+            updateTableListEmployeee(tableModel);
             JOptionPane.showMessageDialog(panelServiceMid, "Sửa thông tin thành công!");
             cardLayout.show(cardPanel, "DV");
         } else {
@@ -336,6 +320,15 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+    // phương thức dùng để cập nhật thông tin của nhân viên lên bảng từ khi lúc thêm sửa xóa là 1 kiểu này
+    private void updateTableListEmployeee(DefaultTableModel tableModel) {
+        tableModel.setRowCount(0);
+        for (NhanVien nhanVien1 : nhanVienListMap.values()) {
+            tableModel.addRow(new Object[]{nhanVien1.getId(), nhanVien1.getName(), nhanVien1.getGender(), nhanVien1.getDate(), nhanVien1.getPosition()});
+        }
+    }
+
+    // chức năng dùng để điều khiển các nút thêm sửa xóa trong chức năng danh sách nhân viên
     @Override
     public ActionListener controlButtonEmployee(JTextField inputSeach, DefaultTableModel tableModel) {
         return new ActionListener() {
@@ -360,6 +353,7 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
+    //  chức năng thêm nhân viên vào bảng
     @Override
     public ActionListener addEmployee(JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel) {
         return new ActionListener() {
@@ -374,36 +368,37 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
+    //chức năng cập nhật danh sách khi thêm nhân viên vào bảng
     private void updateAddEmployee(String name, String gender, String date, String position, DefaultTableModel tableModel) {
         String idEmployee = idEmployee();
         NhanVien nhanVien = new NhanVien(idEmployee, name, gender, date, position);
         nhanVienListMap.put(idEmployee, nhanVien);
-        updateTable(tableModel);
+        updateTableListEmployeee(tableModel);
         JOptionPane.showMessageDialog(panelServiceMid, "Thêm thành công!");
         cardLayout.show(cardPanel, "DV");
     }
 
+    // chức năng lấy id tự động tăng dần
     private String idEmployee() {
-        loadListEmployee();
         int idMax = 0;
-        System.out.println(nhanVienListMap.size());
         idMax = nhanVienListMap.size();
-        idMax++;
-        return Integer.toString(idMax);
+        return Integer.toString(++idMax);
     }
 
+    // chức năng xóa nhân viên trong bảng
     private void deleteEmployee(JTextField inputSeach, DefaultTableModel tableModel) {
         String id = inputSeach.getText();
         NhanVien nhanVien = nhanVienListMap.get(id);
         if (nhanVien != null) {
             nhanVienListMap.remove(id);
-            updateTable(tableModel);
+            updateTableListEmployeee(tableModel);
             JOptionPane.showMessageDialog(panelServiceMid, "Xóa nhân viên thành công!");
         } else {
             JOptionPane.showMessageDialog(panelServiceMid, "Không tìm thấy nhân viên với ID này!");
         }
     }
 
+    // chức năng xuất file trong báo cáo
     public void xuatBaoCaoTXT() {
         loadDataTableReport();
         JFileChooser fileChooser = new JFileChooser();
@@ -426,6 +421,7 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+    // chức năng cập nhật thông tin vào bảng
     public void updateTable3(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         nhanVienArrayList.clear();
@@ -435,12 +431,13 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+    // chức năng cập nhật dữ liệu từ file dataReport.txt vào bảng
     public void loadDataTableReport() {
         try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/dataReport.txt "))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 5 ) {
+                if (data.length == 5) {
                     NhanVien nhanVien = new NhanVien(data[0], data[1], data[2], data[3], data[4], 0);
                     nhanVien.setWage(Math.round(calculateIndividualSalary(nhanVien)));
                     nhanVienArrayList.add(nhanVien);
@@ -450,9 +447,13 @@ public class ActionManagenment implements IControllerManagenment {
             e.printStackTrace();
         }
     }
+
+    // chức năng tính lương của nhân viên
     private double wageEmployee(NhanVien nhanVien) {
         return nhanVien.wage();  // Tính lương cơ bản cho từng nhân viên
     }
+
+    // chức năng tính lương dựa trên nghỉ phép và chấm công
     private double calculateIndividualSalary(NhanVien nhanVien) {
         double salary = wageEmployee(nhanVien);  // Lương cơ bản của nhân viên
         boolean hasLeave = false;
@@ -480,6 +481,7 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+    // chức năng các nút của report
     @Override
     public ActionListener controlReport(DefaultTableModel tableModel) {
         return new ActionListener() {
@@ -504,13 +506,14 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
-
+    // chức năng sắp xếp vị trí của nhân viên
     private void sortPosition() {
         nhanVienArrayList.clear();
         loadDataTableReport();
         Collections.sort(nhanVienArrayList, new PositionComparator());
     }
 
+    // chức năng cập nhật vị trí khi đã sắp xếp theo chức vụ
     private void updateTablePosition(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         sortPosition();
@@ -519,12 +522,14 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
+    // chức năng sắp xếp theo lương tính được
     private void sortWage() {
         nhanVienArrayList.clear();
         loadDataTableReport();
         Collections.sort(nhanVienArrayList, new WageComparator());
     }
 
+    // chức năng cập nhật vị trí khi đã sắp xếp theo số lương
     public void updateTableWage(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
         sortWage();
@@ -533,7 +538,7 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
-
+    // chức năng điều khiển các button ở chức năng chấm công
     @Override
     public ActionListener controlButtonTimeKeeping(JTextField inputSeach, DefaultTableModel tableModel, JTable table) {
         return new ActionListener() {
@@ -554,6 +559,7 @@ public class ActionManagenment implements IControllerManagenment {
         };
     }
 
+    // chức năng tạo biểu đồ thống kê
     private void createAndDisplayChart(DefaultTableModel tableModel) {
         chamCongs.clear();
         JPanel chartPanelContainer = new JPanel();
@@ -566,6 +572,7 @@ public class ActionManagenment implements IControllerManagenment {
         JOptionPane.showMessageDialog(panelTimeKeeping, chartPanelContainer, "Biểu đồ chấm công", JOptionPane.PLAIN_MESSAGE);
     }
 
+    // hàm phụ cho phương thức tạo bảng thống kê
     private CategoryDataset createDataset() {
         loadDataTimeKeeping();
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -575,6 +582,7 @@ public class ActionManagenment implements IControllerManagenment {
         return dataset;
     }
 
+    // tạo biểu đồ
     private JFreeChart createChart(CategoryDataset dataset) {
         return ChartFactory.createBarChart(
                 "Biểu đồ chấm công nhân viên",
@@ -585,6 +593,7 @@ public class ActionManagenment implements IControllerManagenment {
                 true, true, false);
     }
 
+    // chức năng tìm kiếm nhân viên xem chấm công như thế nào
     public void findTimeKeeping(JTextField inputSeach, DefaultTableModel tableModel, JTable table) {
         ArrayList<ChamCong> list = new ArrayList<>();
         list.clear();
@@ -599,6 +608,7 @@ public class ActionManagenment implements IControllerManagenment {
         table.repaint();
     }
 
+    // hàm phụ cập nhật lại khi tìm kiếm nhân viên
     public void updateTableTimeKeeping1(DefaultTableModel tableModel, ArrayList<ChamCong> list) {
         tableModel.setRowCount(0);
         for (ChamCong chamCong : list) {
@@ -608,6 +618,7 @@ public class ActionManagenment implements IControllerManagenment {
 
     }
 
+    // chức năng tìm kiếm trên jTextfiel
     @Override
     public void updateTableTimeKeeping(DefaultTableModel tableModel) {
         tableModel.setRowCount(0);
@@ -619,6 +630,7 @@ public class ActionManagenment implements IControllerManagenment {
 
     }
 
+    // chức năng thêm data vào danh sách chấm công từ file TimeKeeping.txt
     private void loadDataTimeKeeping() {
         try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/TimeKeeping.txt"))) {
             String line;

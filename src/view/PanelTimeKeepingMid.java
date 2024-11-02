@@ -7,10 +7,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+// class dùng để hiện thị giao diện chấm công
 public class PanelTimeKeepingMid extends JPanel {
     static JTable table;
     static DefaultTableModel tableModel;
-    JButton button,back;
+    JButton button, back;
     JTextField inputSeach;
 
     public PanelTimeKeepingMid(IControllerManagenment iController) {
@@ -38,12 +39,12 @@ public class PanelTimeKeepingMid extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
-        back=new JButton(nameButton.get(0));
+        back = new JButton(nameButton.get(0));
         back.addActionListener(iController.backHome());
         jPanel1.add(back);
         for (int i = 1; i < nameButton.size(); i++) {
             button = new JButton(nameButton.get(i));
-            button.addActionListener(iController.controlButtonTimeKeeping(inputSeach, tableModel,table));
+            button.addActionListener(iController.controlButtonTimeKeeping(inputSeach, tableModel, table));
             jPanel1.add(button);
         }
 

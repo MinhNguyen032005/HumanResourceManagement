@@ -1,5 +1,8 @@
 package data.chamCong;
 
+/**
+ * đây là lớp dùng để định nghĩa chức năng chấm công
+ */
 public class ChamCong {
     String id;
     String name;

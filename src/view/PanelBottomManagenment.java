@@ -7,11 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+// class để chứa các button bên dưới trong panel chính
 public class PanelBottomManagenment extends JPanel {
     JButton btn;
+
     public PanelBottomManagenment(IControllerManagenment iController) {
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
-        ArrayList<String> stringButton=new ArrayList<>();
+        ArrayList<String> stringButton = new ArrayList<>();
         stringButton.add("<- Đăng xuất");
         setLayout(new FlowLayout(FlowLayout.LEFT));
         for (int i = 0; i < stringButton.size(); i++) {
@@ -24,7 +26,7 @@ public class PanelBottomManagenment extends JPanel {
             btn.setFocusable(false);
             btn.setOpaque(false);
             btn.setBorder(null);
-            btn.setSize(50,50);
+            btn.setSize(50, 50);
             btn.addActionListener(iController.logout());
             this.add(btn);
         }

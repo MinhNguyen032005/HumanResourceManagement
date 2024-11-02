@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+// class hiện thị giao diện nghỉ phép
 public class PanelLeave extends JPanel {
     private JScrollPane jScrollPane;
     private JButton buttonBack, buttonFind;

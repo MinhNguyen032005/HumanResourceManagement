@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+// class chứa panel đăng nhập
 public class SignInForm extends JPanel {
     JPanel infoPanel;   //Trick: Tạo 1 JPanel lồng các JTextField và JLabel lại
     JTextField account;
@@ -33,7 +34,7 @@ public class SignInForm extends JPanel {
         this.account = new JTextField(20);
         this.passwd = new JPasswordField(20);
         this.button = new JButton("Đăng nhập");
-        this.accounts=new HashMap<>();
+        this.accounts = new HashMap<>();
 
         this.account.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Tên đăng nhập", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12f)));
         this.passwd.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Mật khẩu", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12f)));
@@ -49,7 +50,7 @@ public class SignInForm extends JPanel {
 
         this.button.setFocusable(false);
         this.button.setBackground(new Color(0, 227, 114));
-        this.button.addActionListener(iController.login(account,passwd,iController));
+        this.button.addActionListener(iController.login(account, passwd, iController));
 
         add(Box.createRigidArea(new Dimension(450, 20)));
         add(title);

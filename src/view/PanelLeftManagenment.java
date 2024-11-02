@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+// class hiện thị panel bên trái chủa panel chính
 public class PanelLeftManagenment extends JPanel {
     JButton btn;
     ArrayList<JButton> jButtons;

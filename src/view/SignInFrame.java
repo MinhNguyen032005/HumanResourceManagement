@@ -1,11 +1,11 @@
 package view;
 
 
-
 import controller.IControllerManagenment;
 
 import javax.swing.*;
 
+// Frame chính
 public class SignInFrame extends JFrame {
     public SignInFrame(JPanel siginPanel, IControllerManagenment iController) throws Exception {
         setTitle("Human Resource managenment");

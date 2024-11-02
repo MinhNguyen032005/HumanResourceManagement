@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+//c class dùng để hiện thị các chức năng khi bấm vào danh sách nhân viên
 public class PanelServiceMid extends JPanel {
     static DefaultTableModel tableModel;
     JTable table;

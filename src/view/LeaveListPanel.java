@@ -23,6 +23,7 @@ public class LeaveListPanel extends JPanel {
         refreshList();
     }
 
+    // chức năng dùng để load file vào và sắp xếp theo ngày tháng tư bé đến lơn
     public void refreshList() {
         removeAll();
         loadDataWork();
@@ -37,6 +38,7 @@ public class LeaveListPanel extends JPanel {
         repaint();
     }
 
+    // chức năng dùng để tìm kiếm thông tin nhân viên
     public void filterLeaves(String keyword) {
         removeAll();
 
@@ -57,6 +59,7 @@ public class LeaveListPanel extends JPanel {
         repaint();
     }
 
+    // chức năng dùng để thêm các lịch nghỉ phép vào trong panel
     private void addLeaveToPanel(NghiPhep leave) {
         JPanel leavePanel = new JPanel(new BorderLayout());
         leavePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -90,6 +93,7 @@ public class LeaveListPanel extends JPanel {
         this.add(leavePanel);
     }
 
+    // chức năng load data vào trong leaveList
     public static void loadDataWork() {
         try (BufferedReader br = new BufferedReader(new FileReader("src/data/leave.txt"))) {
             String line;

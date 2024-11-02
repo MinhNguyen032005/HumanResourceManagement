@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+//class dùng để hiện thị cho người xem thấy khi mình bấm vào báo cáo
 public class PanelReport extends JPanel {
     JTable table;
     DefaultTableModel tableModel;
@@ -34,11 +35,10 @@ public class PanelReport extends JPanel {
         setLayout(new BorderLayout());
         JPanel jPanel = new JPanel();
         JPanel jPanel1 = new JPanel();
-        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
         for (int i = 1; i < nameButton.size(); i++) {
-            button=new JButton(nameButton.get(i));
+            button = new JButton(nameButton.get(i));
             button.addActionListener(iController.controlReport(tableModel));
             jPanel1.add(button);
         }

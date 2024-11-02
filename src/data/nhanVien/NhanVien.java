@@ -1,7 +1,7 @@
 package data.nhanVien;
 
 import java.util.Comparator;
-
+//đây là lớp dùng để định nghĩa chức năng nhân viên
 public class NhanVien {
     private static final long serialVersionUID = 1L;
     private String id;

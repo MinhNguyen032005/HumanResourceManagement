@@ -4,7 +4,7 @@ import data.nhanVien.NhanVien;
 
 import java.util.Comparator;
 import java.util.Objects;
-
+//đây là lớp dùng để định nghĩa chức năng nghỉ phép
 public class NghiPhep  {
     String id;
     String name;
