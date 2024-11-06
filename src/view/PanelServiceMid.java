@@ -15,10 +15,10 @@ public class PanelServiceMid extends JPanel {
     static DefaultTableModel tableModel;
     JTable table;
     JButton button;
-    JButton back;
     static JTextField inputSeach;
 
     public PanelServiceMid(IControllerManagenment iController) {
+        Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
         ArrayList<String> list = new ArrayList<>();
         list.add("Mã nhân viên ");
         list.add("Tên nhân viên");
@@ -26,102 +26,68 @@ public class PanelServiceMid extends JPanel {
         list.add("Ngày sinh");
         list.add("Chức vụ");
         ArrayList<String> nameButton = new ArrayList<>();
-        nameButton.add("<- Back");
         nameButton.add("Thêm");
         nameButton.add("Sửa");
         nameButton.add("Xóa");
         JButton jButtonSeach = new JButton("Tìm kiếm");
-        inputSeach = new JTextField(20);
+        inputSeach = new JTextField(10);
+        inputSeach.setFont(new Font("a",Font.BOLD,15));
         setBackground(new Color(197, 197, 197));
         tableModel = new DefaultTableModel(list.toArray(), 0);
         table = new JTable(tableModel);
+        table.setPreferredScrollableViewportSize(new Dimension(700, 200));
         iController.updateTable(tableModel);
         setLayout(new BorderLayout());
         JPanel jPanel = new JPanel();
         JPanel jPanel1 = new JPanel();
+        JPanel jPanel2 = new JPanel();
         JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        add(scrollPane, BorderLayout.CENTER);
-        for (int i = 1; i < nameButton.size(); i++) {
+        jPanel2.add(scrollPane, BorderLayout.CENTER);
+        for (int i = 0; i < nameButton.size(); i++) {
             button = new JButton(nameButton.get(i));
-            button.addActionListener(iController.controlButtonEmployee(inputSeach, tableModel));
+            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            button.setFont(FontLoader.loadCustomizeFont(robotoMedium, 15f));
+            button.setPreferredSize(new Dimension(100, 30));
+            button.setFocusable(false);
+            button.setBackground(new Color(0, 227, 114));
+            button.addActionListener(e -> {
+                String string = e.getActionCommand();
+                switch (string) {
+                    case "Thêm": {
+                        iController.addEmployee(tableModel);
+                        break;
+                    }
+                    case "Sửa": {
+                        iController.fixEmployee(tableModel, inputSeach);
+                        break;
+                    }
+                    case "Xóa": {
+                        iController.deleteEmployee(tableModel, inputSeach);
+                        break;
+                    }
+                    case "Tìm kiếm": {
+                        iController.findEmPloyee(inputSeach, tableModel);
+                        break;
+                    }
+                }
+            });
             jPanel1.add(button);
         }
         inputSeach.addKeyListener(iController.newTable(tableModel, inputSeach));
         jButtonSeach.addActionListener(iController.findEmPloyee(inputSeach, tableModel));
-        back = new JButton(nameButton.get(0));
-        back.addActionListener(iController.backHome());
+        jButtonSeach.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        jButtonSeach.setFont(FontLoader.loadCustomizeFont(robotoMedium, 15f));
+        jButtonSeach.setPreferredSize(new Dimension(100, 30));
+        jButtonSeach.setFocusable(false);
+        jButtonSeach.setBackground(new Color(0, 227, 114));
         jPanel1.setLayout(new FlowLayout());
         jPanel1.add(inputSeach);
         jPanel1.add(jButtonSeach);
         jPanel.setLayout(new BorderLayout());
-        jPanel.add(back, BorderLayout.WEST);
         jPanel.add(jPanel1, BorderLayout.CENTER);
-        add(jPanel, BorderLayout.SOUTH);
-    }
-
-    public static class PanelFixEmployee extends JPanel {
-        JTextField inputName;
-        JTextField inputGender;
-        JTextField inputDate;
-        JTextField inputPosition;
-        JButton btnUpdate;
-
-        public PanelFixEmployee(IControllerManagenment iControllerManagenment) {
-            Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
-            setSize(100, 100);
-            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            inputName = new JTextField();
-            inputName.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Họ và tên", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            inputGender = new JTextField();
-            inputGender.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Giới tính ", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            inputDate = new JTextField();
-            inputDate.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Năm Tháng Ngày", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            inputPosition = new JTextField();
-            inputPosition.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Chức vụ", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            btnUpdate = new JButton("Sửa thông tin");
-            btnUpdate.addActionListener(iControllerManagenment.fixInformationEmployee(inputSeach, inputName, inputGender, inputDate, inputPosition, tableModel));
-            JPanel jPanel = new JPanel();
-            jPanel.add(btnUpdate);
-            add(inputName);
-            add(inputGender);
-            add(inputDate);
-            add(inputPosition);
-            add(jPanel);
-
-        }
-    }
-
-    public static class PanelAddEmployee extends JPanel {
-        JTextField inputName;
-        JTextField inputGender;
-        JTextField inputDate;
-        JTextField inputPosition;
-        JButton btnUpdate;
-
-        public PanelAddEmployee(IControllerManagenment iControllerManagenment) {
-            Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
-            setSize(100, 100);
-            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            inputName = new JTextField();
-            inputName.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Họ và tên", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            inputGender = new JTextField();
-            inputGender.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Giới tính ", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            inputDate = new JTextField();
-            inputDate.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Năm Tháng Ngày", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            inputPosition = new JTextField();
-            inputPosition.setBorder(BorderFactory.createTitledBorder(new LineBorder(Color.BLACK), "Chức vụ", 0, 0, FontLoader.loadCustomizeFont(robotoMedium, 12)));
-            btnUpdate = new JButton("Thêm nhân viên");
-            btnUpdate.addActionListener(iControllerManagenment.addEmployee(inputName, inputGender, inputDate, inputPosition, tableModel));
-            JPanel jPanel = new JPanel();
-            jPanel.add(btnUpdate);
-            add(inputName);
-            add(inputGender);
-            add(inputDate);
-            add(inputPosition);
-            add(jPanel);
-
-        }
+        jPanel2.add(jPanel, BorderLayout.SOUTH);
+        add(jPanel2);
     }
 
 }

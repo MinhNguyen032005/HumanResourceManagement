@@ -14,6 +14,7 @@ public class SignInFrame extends JFrame {
         setLocationRelativeTo(null);
         add(siginPanel);
 
+        setResizable(false);
         setVisible(true);
     }
 }

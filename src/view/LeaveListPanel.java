@@ -41,7 +41,6 @@ public class LeaveListPanel extends JPanel {
     // chức năng dùng để tìm kiếm thông tin nhân viên
     public void filterLeaves(String keyword) {
         removeAll();
-
         PriorityQueue<NghiPhep> filteredLeaves = new PriorityQueue<>(Comparator.comparing(NghiPhep::getDate).reversed());
 
         for (NghiPhep leave : allLeaves) {

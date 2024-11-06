@@ -15,9 +15,6 @@ public interface IControllerManagenment {
     // chức năng điều kiển các button trong giao diện chính bên trái
     ActionListener controlButtonLeft();
 
-    // chức năng trở lại trang chính
-    ActionListener backHome();
-
     // chức năng cập nhật bảng vào trong giao diện
     void updateTable(DefaultTableModel tableModel);
 
@@ -26,15 +23,6 @@ public interface IControllerManagenment {
 
     // chức năng cập nhật bản khi thanh tìm kiếm không có dữ liệu nhập vào
     KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach);
-
-    // chức năng sửa thông tin của nhân viên trong danh sách nhân viên
-    ActionListener fixInformationEmployee(JTextField inputSeach, JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel);
-
-    // chức năng điều khiển các button trong chức năng danh sách nhân viên
-    ActionListener controlButtonEmployee(JTextField inputSeach, DefaultTableModel tableModel);
-
-    // chức năng thêm nhân viên vào trong danh sách nhân viên
-    ActionListener addEmployee(JTextField inputName, JTextField inputGender, JTextField inputDate, JTextField inputPosition, DefaultTableModel tableModel);
 
     // chức năng cập nhật lại bảng thông tin
     void updateTable3(DefaultTableModel tableModel);
@@ -45,9 +33,25 @@ public interface IControllerManagenment {
     //  chức năng của cách nút  trong phần báo cáo
     ActionListener controlReport(DefaultTableModel tableModel);
 
-    // chức năng của các nút  trong phần chấm công
-    ActionListener controlButtonTimeKeeping(JTextField inputSeach, DefaultTableModel tableModel, JTable table);
-
     // chức năng cập nhật vào bảng trong bảng chấm công
     void updateTableTimeKeeping(DefaultTableModel tableModel);
+
+    // chức năng thêm nhân viên vào bảng
+    void addEmployee(DefaultTableModel tableModel);
+
+    // chức năng sửa thông tin nhân viên
+    void fixEmployee(DefaultTableModel tableModel, JTextField input);
+
+    // chức năng xóa nhân viên
+    void deleteEmployee(DefaultTableModel tableModel, JTextField input);
+
+    // chức năng tạo bảng thống kê
+    void createAndDisplayChart(DefaultTableModel tableModel);
+
+    // chức năng tìm kiếm nhân viên
+    void findTimeKeeping(JTextField inputSeach, DefaultTableModel tableModel, JTable table);
+
+    // chức năng khi jtextfiel không có gì thì sẽ cập nhật bảng mới
+    KeyListener newTable1(DefaultTableModel tableModel, JTextField inputSeach, JButton button);
+
 }

@@ -1,6 +1,7 @@
 package view;
 
 import controller.IControllerManagenment;
+import utilities.FontLoader;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,6 +16,7 @@ public class PanelTimeKeepingMid extends JPanel {
     JTextField inputSeach;
 
     public PanelTimeKeepingMid(IControllerManagenment iController) {
+        Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
         ArrayList<String> list = new ArrayList<>();
         list.add("Mã nhân viên ");
         list.add("Tên nhân viên");
@@ -25,10 +27,10 @@ public class PanelTimeKeepingMid extends JPanel {
         list.add("ĐI muộn");
         list.add("Thời gian làm");
         ArrayList<String> nameButton = new ArrayList<>();
-        nameButton.add("<- Back");
         nameButton.add("Thống kê");
         nameButton.add("Tìm kiếm");
-        inputSeach = new JTextField(20);
+        inputSeach = new JTextField(10);
+        inputSeach.setFont(new Font("a",Font.BOLD,15));
         setBackground(new Color(197, 197, 197));
         tableModel = new DefaultTableModel(list.toArray(), 0);
         table = new JTable(tableModel);
@@ -39,15 +41,31 @@ public class PanelTimeKeepingMid extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
-        back = new JButton(nameButton.get(0));
-        back.addActionListener(iController.backHome());
-        jPanel1.add(back);
-        for (int i = 1; i < nameButton.size(); i++) {
+        for (int i = 0; i < nameButton.size(); i++) {
             button = new JButton(nameButton.get(i));
-            button.addActionListener(iController.controlButtonTimeKeeping(inputSeach, tableModel, table));
+            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            button.setFont(FontLoader.loadCustomizeFont(robotoMedium, 15f));
+            button.setPreferredSize(new Dimension(100, 30));
+            button.setFocusable(false);
+            button.setBackground(new Color(0, 227, 114));
+            button.addActionListener(e -> {
+                String string = e.getActionCommand();
+                switch (string) {
+                    case "Thống kê": {
+                        iController.createAndDisplayChart(tableModel);
+                        break;
+                    }
+                    case "Tìm kiếm": {
+                        iController.findTimeKeeping(inputSeach, tableModel, table);
+                        button.setEnabled(false);
+                        break;
+                    }
+                }
+            });
             jPanel1.add(button);
         }
-
+        inputSeach.addKeyListener(iController.newTable1(tableModel,inputSeach,button));
+        scrollPane.setPreferredSize(new Dimension(750, 300)); // Đặt kích thước cho JScrollPane
         jPanel1.setLayout(new FlowLayout());
         jPanel1.add(inputSeach);
         jPanel.setLayout(new BorderLayout());

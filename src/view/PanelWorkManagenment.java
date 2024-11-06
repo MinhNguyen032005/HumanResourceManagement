@@ -26,12 +26,12 @@ public class PanelWorkManagenment extends JPanel {
     });
 
     public PanelWorkManagenment(PanelWork panelWork, IControllerManagenment iControllerManagenment) {
-        button = new JButton("<- Back");
-        button.addActionListener(iControllerManagenment.backHome());
+        JPanel jPanel=new JPanel();
         jScrollPane = new JScrollPane(panelWork, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        jScrollPane.setPreferredSize(new Dimension(750, 300));
         setLayout(new BorderLayout());
-        add(jScrollPane, BorderLayout.CENTER);
-        add(button, BorderLayout.SOUTH);
+        jPanel.add(jScrollPane, BorderLayout.CENTER);
+        add(jPanel);
 
 
     }
@@ -43,7 +43,7 @@ public class PanelWorkManagenment extends JPanel {
         public PanelWork() {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             addPanel();
-            setPreferredSize(new Dimension(400, 1000));
+            setPreferredSize(new Dimension(200, 1000));
         }
 
         public void addPanel() {
