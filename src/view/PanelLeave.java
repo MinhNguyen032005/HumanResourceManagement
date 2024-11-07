@@ -21,13 +21,13 @@ public class PanelLeave extends JPanel {
 
     public PanelLeave(IControllerManagenment controller, Set<NghiPhep> nghiPheps) {
         this.controller = controller;
-        this.leaveListPanel = new LeaveListPanel(nghiPheps);
+        this.leaveListPanel = new LeaveListPanel(nghiPheps,controller);
 
-        initUI();
+        initUI(nghiPheps,controller);
         setupListeners();
     }
 
-    private void initUI() {
+    private void initUI(Set<NghiPhep> nghiPheps,IControllerManagenment controller) {
         Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
         JPanel panel = new JPanel();
         JPanel jPanel = new JPanel(new FlowLayout());
@@ -47,7 +47,7 @@ public class PanelLeave extends JPanel {
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 if (jTextField.getText().equals("")) {
-                    leaveListPanel.refreshList();
+                    leaveListPanel.refreshList(controller,nghiPheps);
                 }
             }
         });

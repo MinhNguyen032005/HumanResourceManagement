@@ -19,10 +19,12 @@ public class PanelBottomManagenment extends JPanel {
         stringButton.add("Đăng xuất");
         setBorder(new MatteBorder(1,0,0,0,Color.BLACK));
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        ImageIcon icon=new ImageIcon("/home/wanmin/ForderOfMy/human resource management/src/storage/img/4831049_door_enter_entrance_exit_leave_icon.png");
         for (int i = 0; i < stringButton.size(); i++) {
+            ImageIcon originalIcon = new ImageIcon("/home/wanmin/ForderOfMy/human resource management/src/storage/img/Dangxuat.png");
+            Image scaledImage = originalIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
             btn = new JButton(stringButton.get(i));
-            btn.setIcon(icon);
+            btn.setIcon(scaledIcon);
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             btn.setHorizontalAlignment(SwingConstants.LEFT);
             btn.setFont(FontLoader.loadCustomizeFont(robotoMedium, 20f));

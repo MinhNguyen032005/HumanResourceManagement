@@ -1,5 +1,6 @@
 package view;
 
+import controller.IControllerManagenment;
 import data.nghiPhep.NghiPhep;
 
 import javax.swing.*;
@@ -16,18 +17,18 @@ public class LeaveListPanel extends JPanel {
     private PriorityQueue<NghiPhep> leaveList;
     private static Set<NghiPhep> allLeaves;
 
-    public LeaveListPanel(Set<NghiPhep> allLeaves) {
+    public LeaveListPanel(Set<NghiPhep> allLeaves, IControllerManagenment iControllerManagenment) {
 
         this.allLeaves = allLeaves;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        refreshList();
+        refreshList(iControllerManagenment,allLeaves);
     }
 
     // chức năng dùng để load file vào và sắp xếp theo ngày tháng tư bé đến lơn
-    public void refreshList() {
+    public void refreshList(IControllerManagenment iControllerManagenment,Set<NghiPhep> allLeaves ) {
         removeAll();
-        loadDataWork();
-        leaveList = new PriorityQueue<>(Comparator.comparing(NghiPhep::getDate).reversed());
+        iControllerManagenment.loadDataWork(allLeaves);
+        leaveList = new PriorityQueue<>(Comparator.comparing(NghiPhep::getDate).thenComparing(NghiPhep::getId).reversed());
         leaveList.addAll(allLeaves);
 
         for (NghiPhep leave : leaveList) {
@@ -92,19 +93,5 @@ public class LeaveListPanel extends JPanel {
         this.add(leavePanel);
     }
 
-    // chức năng load data vào trong leaveList
-    public static void loadDataWork() {
-        try (BufferedReader br = new BufferedReader(new FileReader("src/data/leave.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 5) {
-                    NghiPhep nghiPhep = new NghiPhep(data[0], data[1], data[2], data[3], data[4]);
-                    allLeaves.add(nghiPhep);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

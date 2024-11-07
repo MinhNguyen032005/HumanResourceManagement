@@ -57,7 +57,7 @@ public class ActionManagenment implements IControllerManagenment {
         accounts = new HashMap<>();
         panelTimeKeepingMid = new PanelTimeKeepingMid(this);
         panelTimeKeeping = new PanelTimeKeeping(this, panelTimeKeepingMid);
-        leaveListPanel = new LeaveListPanel(nghiPheps);
+        leaveListPanel = new LeaveListPanel(nghiPheps, this);
         panelLeave = new PanelLeave(this, nghiPheps);
         panelWork = new PanelWorkManagenment.PanelWork();
         panelWorkManagenment = new PanelWorkManagenment(panelWork, this);
@@ -248,13 +248,7 @@ public class ActionManagenment implements IControllerManagenment {
 
     //phương thức dùng để cập nhật thông tin của nhân viên lên bảng hiện thị từ lúc đầu
     private void updateEmployee(String id, String newName, String newGender, String newDate, String newPosition, DefaultTableModel tableModel) {
-        String n="";
-        for (int i = 0; i < nhanVienListMap.size(); i++) {
-            if (nhanVienListMap.values().contains(id)){
-                n=nhanVienListMap.get(i).getId();
-            }
-        }
-        NhanVien nhanVien = nhanVienListMap.get(n);
+        NhanVien nhanVien = nhanVienListMap.get(id);
         if (nhanVien != null) {
             nhanVien.setName(newName);
             nhanVien.setGender(newGender);
@@ -355,29 +349,52 @@ public class ActionManagenment implements IControllerManagenment {
 
     // chức năng tính lương dựa trên nghỉ phép và chấm công
     private double calculateIndividualSalary(NhanVien nhanVien) {
+        loadDataTimeKeeping();
+        int countChamCong = 0;
+        int countNghiPhep = 0;
         double salary = wageEmployee(nhanVien);  // Lương cơ bản của nhân viên
-        boolean hasLeave = false;
-        boolean hasAttendance = false;
-
-        for (NghiPhep nghiPhep : nghiPheps) {
-            if (nhanVien.getId().equals(nghiPhep.getId())) {
-                hasLeave = true;  // Nhân viên có nghỉ phép
-                break;
+        boolean[] hasLeave = new boolean[3];
+        boolean[] hasAttendance = new boolean[3];
+        ArrayList arrayListNghiPhep = new ArrayList(nghiPheps);
+        for (int i = 0; i < arrayListNghiPhep.size(); i++) {
+            if (nhanVien.getId().equals(arrayListNghiPhep.get(i))) {
+                if (countNghiPhep < 3) {
+                    hasLeave[countNghiPhep++] = true;
+                }
+            }
+        }
+        for (int i = 0; i < chamCongs.size(); i++) {
+            if (nhanVien.getId().equals(chamCongs.get(i).getId())) {
+                if (countChamCong < 3) {
+                    hasAttendance[countChamCong++] = true;
+                }
             }
         }
 
-        for (ChamCong chamCong : chamCongs) {
-            if (nhanVien.getId().equals(chamCong.getId())) {
-                hasAttendance = true;  // Nhân viên có chấm công
-                break;
+        for (int i = 0; i < hasAttendance.length; i++) {
+            if (hasAttendance[i] == false && hasLeave[i] == false) {
+                salary -= salary * (1 - 0.8);
+            } else if (hasAttendance[i] == false && hasLeave[i] == true) {
+                salary -= salary * (1 - 0.3);
             }
         }
-        if (hasLeave && hasAttendance) {
-            return salary * (1 - 0.2);  // Giảm 20% lương khi có nghỉ phép và chấm công
-        } else if (!hasLeave && hasAttendance) {
-            return salary * (1 - 0.5);  // Giảm 50% lương khi không nghỉ phép nhưng có chấm công
-        } else {
-            return salary * (1 - 0.8);  // Giảm 80% lương khi không nghỉ phép và không chấm công
+        return salary;
+
+    }
+    // chức năng cập nhật dữ liệu vào trong set
+    @Override
+    public void loadDataWork(Set<NghiPhep> allLeaves) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/leave.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 5) {
+                    NghiPhep nghiPhep = new NghiPhep(data[0], data[1], data[2], data[3], data[4]);
+                    allLeaves.add(nghiPhep);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -402,7 +419,7 @@ public class ActionManagenment implements IControllerManagenment {
                         break;
                     }
 
-                    case "Cập nhật":{
+                    case "Cập nhật": {
                         updateTable3(tableModel);
                     }
                 }

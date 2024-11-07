@@ -21,11 +21,11 @@ public class PanelLeftManagenment extends JPanel {
         stringButton.add("Chấm công");
         stringButton.add("Nghỉ phép");
         ArrayList<String> strings=new ArrayList<>();
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/2124299_app_document_report_essential_icon.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/1471104_align_employee_general_human_human list_icon.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/1988568_checklist_office_pen_signature_note_icon.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/2672709_essential_app_clipboard_object_time_icon.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/6138479_circle_out_person_profile_user_icon.png");
+        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/BaoCao.png");
+        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/DanhSach.png");
+        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/CongViec.png");
+        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/ChamCong.png");
+        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/NghiPhep.png");
         setBorder(new MatteBorder(0, 0, 0, 1, Color.BLACK));
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

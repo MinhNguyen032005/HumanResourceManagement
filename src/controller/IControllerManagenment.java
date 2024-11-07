@@ -1,9 +1,12 @@
 package controller;
 
+import data.nghiPhep.NghiPhep;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.util.Set;
 
 public interface IControllerManagenment {
     // chức năng đăng nhập
@@ -53,5 +56,7 @@ public interface IControllerManagenment {
 
     // chức năng khi jtextfiel không có gì thì sẽ cập nhật bảng mới
     KeyListener newTable1(DefaultTableModel tableModel, JTextField inputSeach, JButton button);
+
+    void loadDataWork(Set<NghiPhep> allLeaves);
 
 }
