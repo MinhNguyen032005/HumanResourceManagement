@@ -31,7 +31,7 @@ public class PanelLeftManagenment extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         for (int i = 0; i < stringButton.size(); i++) {
             ImageIcon originalIcon = new ImageIcon(strings.get(i));
-            Image scaledImage = originalIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30 , Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(scaledImage);
             this.add(Box.createVerticalStrut(40));
             btn = new JButton(stringButton.get(i));

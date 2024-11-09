@@ -2,20 +2,22 @@ package data.congViec;
 
 import java.util.Comparator;
 
- //đây là lớp dùng để định nghĩa chức năng công việc
-public class CongViec{
+//đây là lớp dùng để định nghĩa chức năng công việc
+public class CongViec {
     private String title;
     private String deception;
     private String date;
     private String position;
     private int num;
+    private boolean isRead;
 
-    public CongViec(String title, String deception, String date, String position,int num) {
+
+    public CongViec(String title, String deception, String date, String position, int num) {
         this.title = title;
         this.deception = deception;
         this.date = date;
         this.position = position;
-        this.num=num;
+        this.num = num;
     }
 
     public String getTitle() {
@@ -37,4 +39,13 @@ public class CongViec{
     public int getNum() {
         return num;
     }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
 }

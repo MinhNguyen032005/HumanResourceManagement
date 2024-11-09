@@ -2,6 +2,7 @@ package view;
 
 import controller.IControllerManagenment;
 import data.congViec.CongViec;
+import data.congViec.Job;
 import data.nhanVien.NhanVien;
 import utilities.FontLoader;
 
@@ -11,20 +12,15 @@ import java.awt.event.ItemEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.List;
-import java.util.PriorityQueue;
 
 //
 public class PanelWorkManagenment extends JPanel {
     static JScrollPane jScrollPane;
-    static PriorityQueue<CongViec> list = new PriorityQueue<>(new Comparator<CongViec>() {
-        @Override
-        public int compare(CongViec o1, CongViec o2) {
-            return Integer.compare(o1.getNum(), o2.getNum());
-        }
-    });
+    static ArrayList<Job> arrayList = new ArrayList();
+    static PriorityQueue<CongViec> list = new PriorityQueue<>(Comparator.comparing(CongViec::getDate).reversed());
 
     public PanelWorkManagenment(PanelWork panelWork, IControllerManagenment iControllerManagenment) {
         JPanel jPanel = new JPanel();
@@ -41,6 +37,7 @@ public class PanelWorkManagenment extends JPanel {
         JCheckBox jCheckBox;
         JLabel mota, ngayThangNam, chucVu;
         JButton buttonTieuDe;
+        Job job;
 
         public PanelWork() {
 
@@ -53,16 +50,17 @@ public class PanelWorkManagenment extends JPanel {
 
         public void addPanel(PanelWork panelWork) {
             Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
+            loadDataInfomation();
             loadDataWork();
             int n = list.size();
             for (int i = 0; i < n; i++) {
                 JPanel jPanel = new JPanel();
                 jPanel.setLayout(new BorderLayout());
                 jPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                jCheckBox = new JCheckBox();
+                jCheckBox = new JCheckBox("Chưa đọc");
                 jCheckBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 jCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-                jCheckBox.setFont(FontLoader.loadCustomizeFont(robotoMedium, 50f));
+                jCheckBox.setFont(FontLoader.loadCustomizeFont(robotoMedium, 15));
                 jCheckBox.setPreferredSize(new Dimension(100, 30));
                 jCheckBox.setBackground(new Color(0, 0, 0, 0));
                 jCheckBox.setFocusable(false);
@@ -71,6 +69,8 @@ public class PanelWorkManagenment extends JPanel {
                 JPanel jPanel1 = new JPanel();
                 jPanel1.setLayout(new BorderLayout());
                 CongViec congViec = list.poll();
+                jCheckBox.setSelected(congViec.isRead());
+                jCheckBox.setText(congViec.isRead() ? "Đã đọc" : "Chưa đọc");
                 buttonTieuDe = new JButton(congViec.getTitle());
                 buttonTieuDe.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 buttonTieuDe.setHorizontalAlignment(SwingConstants.LEFT);
@@ -97,33 +97,64 @@ public class PanelWorkManagenment extends JPanel {
                 jPanel2.add(chucVu, BorderLayout.NORTH);
                 jPanel2.add(ngayThangNam, BorderLayout.SOUTH);
                 jPanel.add(jPanel2, BorderLayout.EAST);
+                List<JCheckBox> checkBoxList = new ArrayList<>();
+                checkBoxList.add(jCheckBox);
                 buttonTieuDe.addActionListener(e -> {
-                    jCheckBox.setSelected(true);
-                    jPanel.setBackground(Color.GRAY);
-                    jPanel2.setBackground(Color.GRAY);
-                    jPanel1.setBackground(Color.GRAY);
-                    panel.setBackground(Color.GRAY);
-//                    jCheckBox.setSelected(true);
-                    jCheckBox.setEnabled(true);
-                    JOptionPane jOptionPane = new JOptionPane();
-
-                });
-                jCheckBox.addItemListener(e -> {
-                    if (e.getStateChange() == 1) {
+                    for (JCheckBox checkBox : checkBoxList) {
+                        checkBox.setSelected(true);
                         jPanel.setBackground(Color.GRAY);
                         jPanel2.setBackground(Color.GRAY);
                         jPanel1.setBackground(Color.GRAY);
                         panel.setBackground(Color.GRAY);
-                    } else {
+                        congViec.setRead(true); // Cập nhật trạng thái trong đối tượng
+                        checkBox.setText("Đã đọc"); // Cập nhật nhãn
+                        this.revalidate();
+                        this.repaint();
+                    }
+                    int i1 = findInformation(arrayList,congViec.getTitle(), congViec.getDate());
+                    JPanel panelOptionpane = new JPanel();
+                    panelOptionpane.setLayout(new BoxLayout(panelOptionpane, BoxLayout.Y_AXIS));
+                    JLabel position = new JLabel(arrayList.get(i1).getPosition());
+                    JLabel jobTitle = new JLabel(arrayList.get(i1).getJobTitle());
+                    JLabel duty = new JLabel(arrayList.get(i1).getDuty());
+                    JLabel date = new JLabel(String.valueOf(arrayList.get(i1).getDate()));
+                    position.setFont(new Font("a", Font.BOLD, 20));
+                    panelOptionpane.add(position);
+                    panelOptionpane.add(Box.createVerticalStrut(10));
+                    panelOptionpane.add(jobTitle);
+                    panelOptionpane.add(Box.createVerticalStrut(10));
+                    panelOptionpane.add(duty);
+                    panelOptionpane.add(Box.createVerticalStrut(10));
+                    panelOptionpane.add(date);
+
+                    // Hiển thị hộp thoại với panel tùy chỉnh
+                    JOptionPane.showMessageDialog(null, panelOptionpane, "Thông tin công việc", JOptionPane.INFORMATION_MESSAGE);
+                });
+                for (JCheckBox checkBox : checkBoxList) {
+                    checkBox.addItemListener(e -> {
+                        boolean isSelected = e.getStateChange() == 2;
                         jPanel.setBackground(null);
                         jPanel1.setBackground(null);
                         jPanel2.setBackground(null);
                         panel.setBackground(null);
-                    }
-                });
+                        congViec.setRead(isSelected);
+                        checkBox.setText("Chưa đọc");
+                    });
 
+                }
                 this.add(jPanel);
             }
+        }
+
+        public int findInformation(ArrayList<Job> arrayList, String string, String ngayThangNam) {
+            for (int j = 0; j < arrayList.size(); j++) {
+                if (string.equals(arrayList.get(j).getJobTitle()) && LocalDate.parse(ngayThangNam).equals(arrayList.get(j).getDate())) {
+                    return j;
+                }
+                System.out.println(string);
+                System.out.println(arrayList.get(j).getPosition());
+            }
+            return -1;
         }
     }
 
@@ -140,6 +171,22 @@ public class PanelWorkManagenment extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void loadDataInfomation() {
+        try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/DataInformationWorking.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split("\t");
+                if (data.length == 4) {
+                    Job job = new Job(data[0], data[1], data[2], LocalDate.parse(data[3]));
+                    arrayList.add(job);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
