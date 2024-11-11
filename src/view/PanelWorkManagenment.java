@@ -37,7 +37,6 @@ public class PanelWorkManagenment extends JPanel {
         JCheckBox jCheckBox;
         JLabel mota, ngayThangNam, chucVu;
         JButton buttonTieuDe;
-        Job job;
 
         public PanelWork() {
 
@@ -47,7 +46,8 @@ public class PanelWorkManagenment extends JPanel {
 
 
         }
-
+        // chức năng này dùng để load dữ liệu từ hàm loadDataWork và loadDataInfomation từ file src/data/workSchedule.txt và src/data/DataInformationWorking.txt
+        // có tác dụng là hiện hộp thoại khi bấm vào chủ đề muốn đọc được xem như mail báo công việc
         public void addPanel(PanelWork panelWork) {
             Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
             loadDataInfomation();
@@ -111,7 +111,7 @@ public class PanelWorkManagenment extends JPanel {
                         this.revalidate();
                         this.repaint();
                     }
-                    int i1 = findInformation(arrayList,congViec.getTitle(), congViec.getDate());
+                    int i1 = findInformation(arrayList,congViec);
                     JPanel panelOptionpane = new JPanel();
                     panelOptionpane.setLayout(new BoxLayout(panelOptionpane, BoxLayout.Y_AXIS));
                     JLabel position = new JLabel(arrayList.get(i1).getPosition());
@@ -145,14 +145,13 @@ public class PanelWorkManagenment extends JPanel {
                 this.add(jPanel);
             }
         }
-
-        public int findInformation(ArrayList<Job> arrayList, String string, String ngayThangNam) {
+        // hàm dùng để tìm kiếm dựa trên thông tin nhập vào
+        public int findInformation(ArrayList<Job> arrayList, CongViec congViec) {
             for (int j = 0; j < arrayList.size(); j++) {
-                if (string.equals(arrayList.get(j).getJobTitle()) && LocalDate.parse(ngayThangNam).equals(arrayList.get(j).getDate())) {
+                Job job = arrayList.get(j);
+                if (job.getJobTitle().equals(congViec.getTitle())) {
                     return j;
                 }
-                System.out.println(string);
-                System.out.println(arrayList.get(j).getPosition());
             }
             return -1;
         }
@@ -179,7 +178,7 @@ public class PanelWorkManagenment extends JPanel {
             while ((line = br.readLine()) != null) {
                 String[] data = line.split("\t");
                 if (data.length == 4) {
-                    Job job = new Job(data[0], data[1], data[2], LocalDate.parse(data[3]));
+                    Job job = new Job(data[0], data[1], data[2], data[3]);
                     arrayList.add(job);
                 }
             }

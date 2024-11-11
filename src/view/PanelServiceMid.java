@@ -87,6 +87,7 @@ public class PanelServiceMid extends JPanel {
         jPanel.setLayout(new BorderLayout());
         jPanel.add(jPanel1, BorderLayout.CENTER);
         jPanel2.add(jPanel, BorderLayout.SOUTH);
+        table.addMouseListener(iController.removeEmployeeClick(tableModel,table));
         add(jPanel2);
     }
 

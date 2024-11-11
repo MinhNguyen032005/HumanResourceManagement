@@ -45,6 +45,7 @@ public class ActionManagenment implements IControllerManagenment {
     Map<String, String> accounts;
     ArrayList<ChamCong> chamCongs;
     Set<NghiPhep> nghiPheps;
+    boolean click = false;
 
     //constructor
     public ActionManagenment() throws Exception {
@@ -381,6 +382,7 @@ public class ActionManagenment implements IControllerManagenment {
         return salary;
 
     }
+
     // chức năng cập nhật dữ liệu vào trong set
     @Override
     public void loadDataWork(Set<NghiPhep> allLeaves) {
@@ -396,6 +398,30 @@ public class ActionManagenment implements IControllerManagenment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // chức năng khi nhấp vào người muốn xóa thì sẽ xóa luôn không cần nhập id
+    @Override
+    public MouseListener removeEmployeeClick(DefaultTableModel tableModel, JTable table) {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {  // Kiểm tra xem có dòng nào được chọn không
+                    int confirm = JOptionPane.showConfirmDialog(
+                            null, "Bạn có chắc chắn muốn xóa dòng đã chọn?", "Xác nhận xóa",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        String employeeId = tableModel.getValueAt(selectedRow, 0).toString();
+                        nhanVienListMap.remove(employeeId);
+                        updateTable(tableModel);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để xóa.");
+                }
+            }
+        };
     }
 
     // chức năng các nút của report
@@ -557,11 +583,138 @@ public class ActionManagenment implements IControllerManagenment {
     public void addEmployee(DefaultTableModel tableModel) {
         String[] chucVu = {"Quan ly", "Ke toan", "Ky su"};
         String[] gioiTinh = {"Nam", "Nu"};
-        JTextField nameField = new JTextField(10);
+        JTextField nameField = new JTextField("Nhập Họ và Tên", 15);
         JComboBox gender = new JComboBox(gioiTinh);
-        JTextField date = new JTextField(15);
+        JTextField dateField = new JTextField("yyyy-mm-dd", 15);
         JComboBox position = new JComboBox(chucVu);
         JPanel panel = new JPanel();
+
+        nameField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (nameField.getText().trim().equals("Nhập Họ và Tên")) {
+                    nameField.setText("");
+                    nameField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (nameField.getText().trim().isEmpty()) {
+                    nameField.setText("Nhập Họ và Tên");
+                    nameField.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        // Xử lý placeholder và kiểm tra định dạng cho dateField
+        dateField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (dateField.getText().trim().equals("yyyy-mm-dd")) {
+                    dateField.setText("");
+                    dateField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                String text = dateField.getText().trim();
+                if (text.isEmpty()) {
+                    dateField.setText("yyyy-mm-dd");
+                    dateField.setForeground(Color.GRAY);
+                } else if (!text.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                    dateField.setText("yyyy-mm-dd");
+                    dateField.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        // Chỉ cho phép chữ cái trong nameField
+        nameField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
+                    e.consume(); // Hủy bỏ nếu nhập số
+                }
+            }
+        });
+
+        // Chỉ cho phép số và dấu '-' trong dateField
+        dateField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+
+                // Kiểm tra nếu ký tự không phải số thì hủy bỏ
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                    return;
+                }
+
+                // Tự động thêm dấu "-" khi nhập xong phần 'yyyy' hoặc 'mm'
+                String text = dateField.getText();
+                int length = text.length();
+
+                if (length == 4 || length == 7) {
+                    dateField.setText(text + "-");
+                }
+
+                // Giới hạn độ dài không vượt quá 10 ký tự (định dạng yyyy-mm-dd)
+
+
+                // Khi đã đủ độ dài 10 ký tự, thực hiện kiểm tra tháng, ngày và tuổi
+                if (length == 9) {
+                    // Kiểm tra định dạng yyyy-mm-dd
+                    try {
+                        String[] parts = (text + c).split("-"); // Lấy các phần năm, tháng, ngày
+                        int year = Integer.parseInt(parts[0]);
+                        int month = Integer.parseInt(parts[1]);
+                        int day = Integer.parseInt(parts[2]);
+
+                        // Kiểm tra tháng từ 1 đến 12
+                        if (month < 1 || month > 12) {
+                            showErrorDialog("Tháng không hợp lệ. Vui lòng nhập từ 01 đến 12.");
+                            e.consume();
+                            return;
+                        }
+
+                        // Kiểm tra ngày trong tháng hợp lệ
+                        if (day < 1 || day > getDaysInMonth(year, month)) {
+                            showErrorDialog("Ngày không hợp lệ trong tháng đã chọn.");
+                            e.consume();
+                            return;
+                        }
+
+                        // Kiểm tra tuổi (18 <= tuổi <= 60)
+                        int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+                        int age = currentYear - year;
+                        if (age < 18 || age > 60) {
+                            showErrorDialog("Tuổi phải từ 18 đến 60. Vui lòng kiểm tra lại.");
+                            e.consume();
+                        }
+
+                    } catch (Exception ex) {
+                        e.consume();
+                    }
+                }
+            }
+
+            // Hàm hỗ trợ để lấy số ngày trong tháng
+            private int getDaysInMonth(int year, int month) {
+                java.util.Calendar calendar = java.util.Calendar.getInstance();
+                calendar.set(year, month - 1, 1); // Tháng tính từ 0-11
+                return calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH);
+            }
+            // Hàm hỗ trợ để hiện hộp thoại khi nhập và ngày tháng năm không thực tế
+            private void showErrorDialog(String message) {
+                JOptionPane.showMessageDialog(null, message, "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+                dateField.setText(""); // Xóa nội dung không hợp lệ
+            }
+
+        });
+
         panel.add(new JLabel("Tên:"));
         panel.add(nameField);
         panel.add(Box.createHorizontalStrut(15)); // tạo khoảng cách giữa các ô nhập
@@ -571,7 +724,7 @@ public class ActionManagenment implements IControllerManagenment {
         panel.add(Box.createHorizontalStrut(15)); // tạo khoảng cách giữa các ô nhập
         panel.add(Box.createHorizontalStrut(15));
         panel.add(new JLabel("Ngày sinh"));
-        panel.add(date);
+        panel.add(dateField);
         panel.add(Box.createHorizontalStrut(15)); // tạo khoảng cách giữa các ô nhập
         panel.add(Box.createHorizontalStrut(15));
         panel.add(new JLabel("Chức vụ"));
@@ -582,7 +735,7 @@ public class ActionManagenment implements IControllerManagenment {
         if (result == 0) {
             String name = nameField.getText();
             String gender1 = (String) gender.getSelectedItem();
-            String date1 = date.getText();
+            String date1 = dateField.getText();
             String position1 = (String) position.getSelectedItem();
             updateAddEmployee(name, gender1, date1, position1, tableModel);
             updateTable3(tableModel);

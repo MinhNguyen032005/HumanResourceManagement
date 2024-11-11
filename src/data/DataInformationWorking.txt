@@ -1,4 +1,4 @@
-Trưởng nhóm phát triển	Phát triển phần mềm Thiết kế và phát triển ứng dụng Java, đảm bảo đáp ứng các yêu cầu của dự án và nâng cao hiệu quả hoạt động	2024-10-17
+Trưởng nhóm phát triển	Phát triển phần mềm	Thiết kế và phát triển ứng dụng Java, đảm bảo đáp ứng các yêu cầu của dự án và nâng cao hiệu quả hoạt động	2024-10-17
 Quản lý dự án cao cấp	Quản lý dự án	Theo dõi tiến độ dự án và phân phối công việc hợp lý cho các thành viên, đảm bảo hoàn thành đúng tiến độ	2024-10-16
 Chuyên gia an ninh mạng	Kỹ sư mạng	Cấu hình và quản trị hệ thống mạng, đảm bảo tính bảo mật và hiệu quả hoạt động liên tục của hệ thống	2024-10-15
 Giám đốc sáng tạo	Thiết kế đồ họa	Thiết kế giao diện người dùng và các tài liệu quảng cáo, đảm bảo tính thẩm mỹ và tính thương hiệu	2024-10-14

@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.util.Set;
 
 public interface IControllerManagenment {
@@ -59,4 +60,5 @@ public interface IControllerManagenment {
 
     void loadDataWork(Set<NghiPhep> allLeaves);
 
+    MouseListener removeEmployeeClick(DefaultTableModel tableModel,JTable table);
 }
