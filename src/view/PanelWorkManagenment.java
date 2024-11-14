@@ -173,7 +173,7 @@ public class PanelWorkManagenment extends JPanel {
     }
 
     public static void loadDataInfomation() {
-        try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/DataInformationWorking.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/DataInformationWorking.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split("\t");

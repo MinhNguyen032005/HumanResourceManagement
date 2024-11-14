@@ -21,11 +21,11 @@ public class PanelLeftManagenment extends JPanel {
         stringButton.add("Chấm công");
         stringButton.add("Nghỉ phép");
         ArrayList<String> strings=new ArrayList<>();
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/BaoCao.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/DanhSach.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/CongViec.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/ChamCong.png");
-        strings.add("/home/wanmin/ForderOfMy/human resource management/src/storage/img/NghiPhep.png");
+        strings.add("src/storage/img/BaoCao.png");
+        strings.add("src/storage/img/DanhSach.png");
+        strings.add("src/storage/img/CongViec.png");
+        strings.add("src/storage/img/ChamCong.png");
+        strings.add("src/storage/img/NghiPhep.png");
         setBorder(new MatteBorder(0, 0, 0, 1, Color.BLACK));
         Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

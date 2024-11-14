@@ -328,7 +328,7 @@ public class ActionManagenment implements IControllerManagenment {
 
     // chức năng cập nhật dữ liệu từ file dataReport.txt vào bảng
     public void loadDataTableReport() {
-        try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/dataReport.txt "))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/dataReport.txt "))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
@@ -801,7 +801,7 @@ public class ActionManagenment implements IControllerManagenment {
 
     // chức năng thêm data vào danh sách chấm công từ file TimeKeeping.txt
     private void loadDataTimeKeeping() {
-        try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/TimeKeeping.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/TimeKeeping.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");

@@ -16,7 +16,7 @@ public class PanelTimeKeepingMid extends JPanel {
     JTextField inputSeach;
 
     public PanelTimeKeepingMid(IControllerManagenment iController) {
-        Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
+        Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         ArrayList<String> list = new ArrayList<>();
         list.add("Mã nhân viên ");
         list.add("Tên nhân viên");

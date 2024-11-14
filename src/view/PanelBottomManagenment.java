@@ -20,7 +20,7 @@ public class PanelBottomManagenment extends JPanel {
         setBorder(new MatteBorder(1,0,0,0,Color.BLACK));
         setLayout(new FlowLayout(FlowLayout.LEFT));
         for (int i = 0; i < stringButton.size(); i++) {
-            ImageIcon originalIcon = new ImageIcon("/home/wanmin/ForderOfMy/human resource management/src/storage/img/Dangxuat.png");
+            ImageIcon originalIcon = new ImageIcon("src/storage/img/Dangxuat.png");
             Image scaledImage = originalIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(scaledImage);
             btn = new JButton(stringButton.get(i));
