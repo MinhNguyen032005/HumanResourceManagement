@@ -28,7 +28,7 @@ public class PanelLeave extends JPanel {
     }
 
     private void initUI(Set<NghiPhep> nghiPheps,IControllerManagenment controller) {
-        Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
+        Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Light.ttf");
         JPanel panel = new JPanel();
         JPanel jPanel = new JPanel(new FlowLayout());
         jTextField = new JTextField(10);
