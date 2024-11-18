@@ -59,11 +59,11 @@ public class PanelServiceMid extends JPanel {
                         break;
                     }
                     case "Sửa": {
-                        iController.fixEmployee(tableModel, inputSeach);
+                        iController.fixEmployee(tableModel, inputSeach,table);
                         break;
                     }
                     case "Xóa": {
-                        iController.deleteEmployee(tableModel, inputSeach);
+                        iController.deleteEmployee(tableModel, inputSeach,table);
                         break;
                     }
                     case "Tìm kiếm": {
@@ -87,7 +87,6 @@ public class PanelServiceMid extends JPanel {
         jPanel.setLayout(new BorderLayout());
         jPanel.add(jPanel1, BorderLayout.CENTER);
         jPanel2.add(jPanel, BorderLayout.SOUTH);
-        table.addMouseListener(iController.removeEmployeeClick(tableModel,table));
         add(jPanel2);
     }
 

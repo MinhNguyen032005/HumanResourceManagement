@@ -400,29 +400,6 @@ public class ActionManagenment implements IControllerManagenment {
         }
     }
 
-    // chức năng khi nhấp vào người muốn xóa thì sẽ xóa luôn không cần nhập id
-    @Override
-    public MouseListener removeEmployeeClick(DefaultTableModel tableModel, JTable table) {
-        return new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {  // Kiểm tra xem có dòng nào được chọn không
-                    int confirm = JOptionPane.showConfirmDialog(
-                            null, "Bạn có chắc chắn muốn xóa dòng đã chọn?", "Xác nhận xóa",
-                            JOptionPane.YES_NO_OPTION);
-
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        String employeeId = tableModel.getValueAt(selectedRow, 0).toString();
-                        nhanVienListMap.remove(employeeId);
-                        updateTable(tableModel);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng để xóa.");
-                }
-            }
-        };
-    }
 
     // chức năng các nút của report
     @Override
@@ -707,6 +684,7 @@ public class ActionManagenment implements IControllerManagenment {
                 calendar.set(year, month - 1, 1); // Tháng tính từ 0-11
                 return calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH);
             }
+
             // Hàm hỗ trợ để hiện hộp thoại khi nhập và ngày tháng năm không thực tế
             private void showErrorDialog(String message) {
                 JOptionPane.showMessageDialog(null, message, "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
@@ -745,7 +723,7 @@ public class ActionManagenment implements IControllerManagenment {
 
     // chức năng dùng dể sửa thông tin trong danh sách
     @Override
-    public void fixEmployee(DefaultTableModel tableModel, JTextField input) {
+    public void fixEmployee(DefaultTableModel tableModel, JTextField input, JTable table) {
         String[] chucVu = {"Quan ly", "Ke toan", "Ky su"};
         String[] gioiTinh = {"Nam", "Nu"};
         JTextField nameField = new JTextField(10);
@@ -767,10 +745,21 @@ public class ActionManagenment implements IControllerManagenment {
         panel.add(Box.createHorizontalStrut(15));
         panel.add(new JLabel("Chức vụ"));
         panel.add(position);
+        String id = input.getText().trim();
+        int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn từ bảng
+
+        if (selectedRow == -1 && id.isEmpty()) {
+            JOptionPane.showMessageDialog(panelServiceMid, "Vui lòng chọn một dòng trên bảng hoặc nhập ID để xóa!");
+            return;
+        }
+
+        // Nếu không có ID trong JTextField, lấy ID từ dòng được chọn
+        if (id.isEmpty() && selectedRow != -1) {
+            id = tableModel.getValueAt(selectedRow, 0).toString();
+        }
         int result = JOptionPane.showConfirmDialog(null, panel,
                 "Nhập thông tin", JOptionPane.OK_CANCEL_OPTION);
         if (result == 0) {
-            String id = input.getText();
             String name = nameField.getText();
             String gender1 = (String) gender.getSelectedItem();
             String date1 = date.getText();
@@ -785,8 +774,19 @@ public class ActionManagenment implements IControllerManagenment {
 
     // chức năng dùng để xóa thông tin của nhân viên trong danh sách
     @Override
-    public void deleteEmployee(DefaultTableModel tableModel, JTextField input) {
-        String id = input.getText();
+    public void deleteEmployee(DefaultTableModel tableModel, JTextField input, JTable table) {
+        String id = input.getText().trim();
+        int selectedRow = table.getSelectedRow(); // Lấy dòng được chọn từ bảng
+
+        if (selectedRow == -1 && id.isEmpty()) {
+            JOptionPane.showMessageDialog(panelServiceMid, "Vui lòng chọn một dòng trên bảng hoặc nhập ID để xóa!");
+            return;
+        }
+
+        // Nếu không có ID trong JTextField, lấy ID từ dòng được chọn
+        if (id.isEmpty() && selectedRow != -1) {
+            id = tableModel.getValueAt(selectedRow, 0).toString();
+        }
         NhanVien nhanVien = nhanVienListMap.get(id);
         if (nhanVien != null) {
             nhanVienListMap.remove(id);
