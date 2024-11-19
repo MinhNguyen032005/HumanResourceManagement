@@ -26,7 +26,7 @@ public interface IControllerManagenment {
     ActionListener findEmPloyee(JTextField jTextField, DefaultTableModel tableModel);
 
     // chức năng cập nhật bản khi thanh tìm kiếm không có dữ liệu nhập vào
-    KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach);
+    KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach,JTable table);
 
     // chức năng cập nhật lại bảng thông tin
     void updateTable3(DefaultTableModel tableModel);

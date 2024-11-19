@@ -30,7 +30,7 @@ public class PanelServiceMid extends JPanel {
         nameButton.add("Sửa");
         nameButton.add("Xóa");
         JButton jButtonSeach = new JButton("Tìm kiếm");
-        inputSeach = new JTextField(10);
+        inputSeach = new JTextField("ID hoặc tên",10);
         inputSeach.setFont(new Font("a",Font.BOLD,15));
         setBackground(new Color(197, 197, 197));
         tableModel = new DefaultTableModel(list.toArray(), 0);
@@ -74,7 +74,7 @@ public class PanelServiceMid extends JPanel {
             });
             jPanel1.add(button);
         }
-        inputSeach.addKeyListener(iController.newTable(tableModel, inputSeach));
+        inputSeach.addKeyListener(iController.newTable(tableModel, inputSeach,table));
         jButtonSeach.addActionListener(iController.findEmPloyee(inputSeach, tableModel));
         jButtonSeach.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jButtonSeach.setFont(FontLoader.loadCustomizeFont(robotoMedium, 15f));
