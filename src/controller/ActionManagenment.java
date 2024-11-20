@@ -103,6 +103,8 @@ public class ActionManagenment implements IControllerManagenment {
                     JOptionPane.showMessageDialog(signInFrame, "Đăng nhập thành công!", "Thông Báo", JOptionPane.DEFAULT_OPTION);
                     switch (text.getText()) {
                         case "truongphong": {
+                            myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
+                            cardPanel.add(myCanvas, "truongphong");
                             cardLayout.show(cardPanel, "truongphong");
                             break;
                         }
