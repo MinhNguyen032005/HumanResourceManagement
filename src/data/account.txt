@@ -1,4 +1,0 @@
-truongphong,123
-nhanvien,123
-nhansu,123
-ketoan,123
