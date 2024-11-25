@@ -214,7 +214,7 @@ public class ActionManagenment implements IControllerManagenment {
 
     //chức năng của jtextfield để hiện lại bẳng khi không có nhập dữ liệu vào
     @Override
-    public KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach,JTable table) {
+    public KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach, JTable table) {
         return new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -434,7 +434,6 @@ public class ActionManagenment implements IControllerManagenment {
                         updateTablePosition(tableModel);
                         break;
                     }
-
                     case "Cập nhật": {
                         updateTable3(tableModel);
                     }
@@ -949,7 +948,7 @@ public class ActionManagenment implements IControllerManagenment {
                     chamCongs.add(chamCong);
                 }
             }
-            Collections.sort(chamCongs,Comparator.comparing(ChamCong::getDate).reversed());
+            Collections.sort(chamCongs, Comparator.comparing(ChamCong::getDate).reversed());
         } catch (IOException e) {
             e.printStackTrace();
         }
