@@ -9,7 +9,7 @@ import java.awt.*;
 public class PanelMidManagenment extends JPanel {
     public PanelMidManagenment(IControllerManagenment iController) {
         setLayout(new GridBagLayout());
-        Font font= FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Light.ttf");
+        Font font= FontLoader.loadFont("src/storage/font/Roboto-Light.ttf");
         JLabel jLabel = new JLabel("Hãy chọn chức năng bạn muốn thực hiện");
         jLabel.setFont(new Font("a", Font.PLAIN, 25));
         GridBagConstraints gbc = new GridBagConstraints();

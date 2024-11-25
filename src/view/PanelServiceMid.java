@@ -18,7 +18,7 @@ public class PanelServiceMid extends JPanel {
     static JTextField inputSeach;
 
     public PanelServiceMid(IControllerManagenment iController) {
-        Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
+        Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
         ArrayList<String> list = new ArrayList<>();
         list.add("Mã nhân viên ");
         list.add("Tên nhân viên");
@@ -30,7 +30,7 @@ public class PanelServiceMid extends JPanel {
         nameButton.add("Sửa");
         nameButton.add("Xóa");
         JButton jButtonSeach = new JButton("Tìm kiếm");
-        inputSeach = new JTextField(10);
+        inputSeach = new JTextField("ID hoặc tên",10);
         inputSeach.setFont(new Font("a",Font.BOLD,15));
         setBackground(new Color(197, 197, 197));
         tableModel = new DefaultTableModel(list.toArray(), 0);
@@ -59,11 +59,11 @@ public class PanelServiceMid extends JPanel {
                         break;
                     }
                     case "Sửa": {
-                        iController.fixEmployee(tableModel, inputSeach);
+                        iController.fixEmployee(tableModel, inputSeach,table);
                         break;
                     }
                     case "Xóa": {
-                        iController.deleteEmployee(tableModel, inputSeach);
+                        iController.deleteEmployee(tableModel, inputSeach,table);
                         break;
                     }
                     case "Tìm kiếm": {
@@ -74,7 +74,7 @@ public class PanelServiceMid extends JPanel {
             });
             jPanel1.add(button);
         }
-        inputSeach.addKeyListener(iController.newTable(tableModel, inputSeach));
+        inputSeach.addKeyListener(iController.newTable(tableModel, inputSeach,table));
         jButtonSeach.addActionListener(iController.findEmPloyee(inputSeach, tableModel));
         jButtonSeach.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jButtonSeach.setFont(FontLoader.loadCustomizeFont(robotoMedium, 15f));
@@ -87,7 +87,6 @@ public class PanelServiceMid extends JPanel {
         jPanel.setLayout(new BorderLayout());
         jPanel.add(jPanel1, BorderLayout.CENTER);
         jPanel2.add(jPanel, BorderLayout.SOUTH);
-        table.addMouseListener(iController.removeEmployeeClick(tableModel,table));
         add(jPanel2);
     }
 

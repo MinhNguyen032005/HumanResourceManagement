@@ -26,7 +26,7 @@ public interface IControllerManagenment {
     ActionListener findEmPloyee(JTextField jTextField, DefaultTableModel tableModel);
 
     // chức năng cập nhật bản khi thanh tìm kiếm không có dữ liệu nhập vào
-    KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach);
+    KeyListener newTable(DefaultTableModel tableModel, JTextField inputSeach,JTable table);
 
     // chức năng cập nhật lại bảng thông tin
     void updateTable3(DefaultTableModel tableModel);
@@ -44,10 +44,10 @@ public interface IControllerManagenment {
     void addEmployee(DefaultTableModel tableModel);
 
     // chức năng sửa thông tin nhân viên
-    void fixEmployee(DefaultTableModel tableModel, JTextField input);
+    void fixEmployee(DefaultTableModel tableModel, JTextField input,JTable table);
 
     // chức năng xóa nhân viên
-    void deleteEmployee(DefaultTableModel tableModel, JTextField input);
+    void deleteEmployee(DefaultTableModel tableModel, JTextField input,JTable table);
 
     // chức năng tạo bảng thống kê
     void createAndDisplayChart(DefaultTableModel tableModel);
@@ -60,5 +60,4 @@ public interface IControllerManagenment {
 
     void loadDataWork(Set<NghiPhep> allLeaves);
 
-    MouseListener removeEmployeeClick(DefaultTableModel tableModel,JTable table);
 }

@@ -49,7 +49,7 @@ public class PanelWorkManagenment extends JPanel {
         // chức năng này dùng để load dữ liệu từ hàm loadDataWork và loadDataInfomation từ file src/data/workSchedule.txt và src/data/DataInformationWorking.txt
         // có tác dụng là hiện hộp thoại khi bấm vào chủ đề muốn đọc được xem như mail báo công việc
         public void addPanel(PanelWork panelWork) {
-            Font robotoMedium = FontLoader.loadFont("/home/wanmin/ForderOfMy/human resource management/src/storage/font/Roboto-Medium.ttf");
+            Font robotoMedium = FontLoader.loadFont("src/storage/font/Roboto-Medium.ttf");
             loadDataInfomation();
             loadDataWork();
             int n = list.size();
@@ -173,7 +173,7 @@ public class PanelWorkManagenment extends JPanel {
     }
 
     public static void loadDataInfomation() {
-        try (BufferedReader br = new BufferedReader(new FileReader("/home/wanmin/ForderOfMy/human resource management/src/data/DataInformationWorking.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/DataInformationWorking.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split("\t");
