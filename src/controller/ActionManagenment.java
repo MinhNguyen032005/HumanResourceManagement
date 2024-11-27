@@ -23,9 +23,11 @@ import java.util.*;
 // lớp này dùng để làm những hành động của các panel có trong view
 public class ActionManagenment implements IControllerManagenment {
     MyCanvasManagenment myCanvas;
+    MyCanvasManagenment myCanvasAccounttant;
     PanelMidManagenment panelMid;
     PanelBottomManagenment panelBottom;
     PanelLeftManagenment panelLeftManagenment;
+    PanelLeftAccountant panelLeftAccountant;
     PanelService panelService;
     PanelServiceMid panelServiceMid;
     SiginPanel siginPanel;
@@ -46,6 +48,7 @@ public class ActionManagenment implements IControllerManagenment {
     ArrayList<ChamCong> chamCongs;
     Set<NghiPhep> nghiPheps;
     boolean click = false;
+    public  static  String role;
 
     //constructor
     public ActionManagenment() throws Exception {
@@ -68,11 +71,14 @@ public class ActionManagenment implements IControllerManagenment {
         panelService = new PanelService(panelServiceMid);
         panelBottom = new PanelBottomManagenment(this);
         panelLeftManagenment = new PanelLeftManagenment(this);
+        panelLeftAccountant = new PanelLeftAccountant(this);
         myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
+        myCanvasAccounttant = new MyCanvasManagenment(panelMid, panelBottom, panelLeftAccountant);
         siginPanel = new SiginPanel(this, cardPanel);
         signInForm = new SignInForm(this, cardPanel);
         cardPanel.add(siginPanel, "login");
         cardPanel.add(myCanvas, "truongphong");
+        cardPanel.add(myCanvasAccounttant, "ketoan");
         signInFrame = new SignInFrame(cardPanel, this);
     }
 
@@ -99,17 +105,16 @@ public class ActionManagenment implements IControllerManagenment {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadAccountsFromFile();
+                role = text.getText();
                 if (accounts.containsKey(text.getText()) && accounts.get(text.getText()).equals(new String(password1.getPassword()))) {
                     JOptionPane.showMessageDialog(signInFrame, "Đăng nhập thành công!", "Thông Báo", JOptionPane.DEFAULT_OPTION);
-                    switch (text.getText()) {
+                    switch (role) {
                         case "truongphong": {
-                            myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
-                            cardPanel.add(myCanvas, "truongphong");
                             cardLayout.show(cardPanel, "truongphong");
                             break;
                         }
                         case "ketoan": {
-
+                            cardLayout.show(cardPanel, "ketoan");
                             break;
                         }
                         case "nhanvien": {
@@ -137,58 +142,69 @@ public class ActionManagenment implements IControllerManagenment {
                     int result = JOptionPane.showConfirmDialog(myCanvas, "Bạn có chắc chắn muốn thoát", "Thông Báo", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (result == JOptionPane.YES_OPTION) {
                         cardLayout.show(cardPanel, "login");
-                    } else {
-                        myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
-                        cardPanel.add(myCanvas, "truongphong");
-                        cardLayout.show(cardPanel, "truongphong");
                     }
                 }
             }
         };
     }
 
-    //chức năng nút bên trái của Managenment
+
+    private MyCanvasManagenment createCanvas(JPanel panelTop, JPanel panelBottom, JPanel panelLeft) {
+        return new MyCanvasManagenment(panelTop, panelBottom, panelLeft);
+    }
+
+    private MyCanvasManagenment getCanvasByRole(String panelType) {
+        JPanel panelLeft;
+        JPanel panelTop;
+
+        switch (role) {
+            case "truongphong":
+                panelLeft = panelLeftManagenment;
+                switch (panelType) {
+                    case "Báo cáo": panelTop = panelReport; break;
+                    case "Nghỉ phép": panelTop = panelLeave; break;
+                    case "Công việc": panelTop = panelWorkManagenment; break;
+                    case "Danh sách NV": panelTop = panelService; break;
+                    case "Chấm công": panelTop = panelTimeKeeping; break;
+                    case "Tổng hợp lương":
+                        panelTop = panelReport;
+                        panelLeft = panelLeftAccountant;
+                        break;
+                    default: return null;
+                }
+                break;
+
+            case "ketoan":
+                panelLeft = panelLeftAccountant;
+                switch (panelType) {
+                    case "Nghỉ phép": panelTop = panelLeave; break;
+                    case "Chấm công": panelTop = panelTimeKeeping; break;
+                    case "Tổng hợp lương": panelTop = panelReport; break;
+                    default: return null;
+                }
+                break;
+
+            default:
+                return null;
+        }
+
+        return createCanvas(panelTop, panelBottom, panelLeft);
+    }
     @Override
     public ActionListener controlButtonLeft() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String string = e.getActionCommand();
-                switch (string) {
-                    case "Báo cáo": {
-                        MyCanvasManagenment myCanvas1 = new MyCanvasManagenment(panelReport, panelBottom, panelLeftManagenment);
-                        cardPanel.add(myCanvas1, "RP");
-                        cardLayout.show(cardPanel, "RP");
-                        break;
-                    }
-                    case "Nghỉ phép": {
-                        MyCanvasManagenment myCanvas1 = new MyCanvasManagenment(panelLeave, panelBottom, panelLeftManagenment);
-                        cardPanel.add(myCanvas1, "LV");
-                        cardLayout.show(cardPanel, "LV");
-                        break;
-                    }
-                    case "Công việc": {
-                        MyCanvasManagenment myCanvas1 = new MyCanvasManagenment(panelWorkManagenment, panelBottom, panelLeftManagenment);
-                        cardPanel.add(myCanvas1, "CV");
-                        cardLayout.show(cardPanel, "CV");
-                        break;
-                    }
-                    case "Danh sách NV": {
-                        MyCanvasManagenment myCanvas1 = new MyCanvasManagenment(panelService, panelBottom, panelLeftManagenment);
-                        cardPanel.add(myCanvas1, "DV");
-                        cardLayout.show(cardPanel, "DV");
-                        break;
-                    }
-                    case "Chấm công": {
-                        MyCanvasManagenment myCanvas1 = new MyCanvasManagenment(panelTimeKeeping, panelBottom, panelLeftManagenment);
-                        cardPanel.add(myCanvas1, "TK");
-                        cardLayout.show(cardPanel, "TK");
-                        break;
-                    }
-                }
+                MyCanvasManagenment canvas = getCanvasByRole(string);
+                    cardPanel.add(canvas, string);
+                    cardLayout.show(cardPanel, string);
+
             }
         };
     }
+
+
 
     //hàm để add danh sách nhân viên vào bảng
     @Override
