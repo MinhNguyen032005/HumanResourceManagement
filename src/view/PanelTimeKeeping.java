@@ -12,4 +12,5 @@ public class PanelTimeKeeping extends JPanel {
     public PanelTimeKeeping(IControllerManagenment iControllerManagenment,PanelTimeKeepingMid panelTimeKeepingMid) {
         add(panelTimeKeepingMid);
     }
+
 }
