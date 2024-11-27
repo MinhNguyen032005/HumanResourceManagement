@@ -36,3 +36,4 @@ public class PanelSalary extends JPanel {
         tableModel.addRow(new Object[]{"2/2024", "8,000,000", "1,000,000", "700,000", "9,700,000"});
     }
 }
+
