@@ -25,14 +25,11 @@ public class ActionManagenment implements IControllerManagenment {
     MyCanvasManagenment myCanvas;
     MyCanvasManagenment myCanvasAccounttant;
     MyCanvasManagenment myCanvasStaff;
-
     PanelMidManagenment panelMid;
     PanelBottomManagenment panelBottom;
-
     PanelLeftManagenment panelLeftManagenment;
     PanelLeftAccountant panelLeftAccountant;
     PanelLeftStaff panelLeftStaff;
-
     PanelService panelService;
     PanelServiceMid panelServiceMid;
     SiginPanel siginPanel;
@@ -84,18 +81,23 @@ public class ActionManagenment implements IControllerManagenment {
         panelBottom = new PanelBottomManagenment(this);
         panelLeftManagenment = new PanelLeftManagenment(this);
         panelLeftAccountant = new PanelLeftAccountant(this);
+
         panelLeftStaff = new PanelLeftStaff(this);
         myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
         myCanvasAccounttant = new MyCanvasManagenment(panelMid, panelBottom, panelLeftAccountant);
         myCanvasStaff = new MyCanvasManagenment(panelMid, panelBottom, panelLeftStaff);
+
+
+        myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
+        myCanvasAccounttant = new MyCanvasManagenment(panelMid, panelBottom, panelLeftAccountant);
 
         siginPanel = new SiginPanel(this, cardPanel);
         signInForm = new SignInForm(this, cardPanel);
         cardPanel.add(siginPanel, "login");
         cardPanel.add(myCanvas, "truongphong");
         cardPanel.add(myCanvasAccounttant, "ketoan");
-        cardPanel.add(myCanvasStaff, "nhanvien");
 
+        cardPanel.add(myCanvasStaff, "nhanvien");
         signInFrame = new SignInFrame(cardPanel, this);
     }
 
@@ -171,13 +173,19 @@ public class ActionManagenment implements IControllerManagenment {
     }
 
     private MyCanvasManagenment getCanvasByRole(String panelType) {
+
         JPanel panelLeft = null;
         JPanel panelTop = null;
+
+        JPanel panelLeft;
+        JPanel panelTop;
+
 
         switch (role) {
             case "truongphong":
                 panelLeft = panelLeftManagenment;
                 switch (panelType) {
+
                     case "Báo cáo":
                         panelTop = panelReport;
                         break;
@@ -193,16 +201,25 @@ public class ActionManagenment implements IControllerManagenment {
                     case "Chấm công":
                         panelTop = panelTimeKeeping;
                         break;
+                    case "Báo cáo": panelTop = panelReport; break;
+                    case "Nghỉ phép": panelTop = panelLeave; break;
+                    case "Công việc": panelTop = panelWorkManagenment; break;
+                    case "Danh sách NV": panelTop = panelService; break;
+                    case "Chấm công": panelTop = panelTimeKeeping; break;
+
                     case "Tổng hợp lương":
                         panelTop = panelReport;
                         panelLeft = panelLeftAccountant;
                         break;
+
+                    default: return null;
                 }
                 break;
 
             case "ketoan":
                 panelLeft = panelLeftAccountant;
                 switch (panelType) {
+
                     case "Nghỉ phép":
                         panelTop = panelLeave;
                         break;
@@ -234,6 +251,20 @@ public class ActionManagenment implements IControllerManagenment {
         return createCanvas(panelTop, panelBottom, panelLeft);
     }
 
+                    case "Nghỉ phép": panelTop = panelLeave; break;
+                    case "Chấm công": panelTop = panelTimeKeeping; break;
+                    case "Tổng hợp lương": panelTop = panelReport; break;
+                    default: return null;
+                }
+                break;
+
+            default:
+                return null;
+        }
+
+        return createCanvas(panelTop, panelBottom, panelLeft);
+    }
+
     @Override
     public ActionListener controlButtonLeft() {
         return new ActionListener() {
@@ -241,8 +272,13 @@ public class ActionManagenment implements IControllerManagenment {
             public void actionPerformed(ActionEvent e) {
                 String string = e.getActionCommand();
                 MyCanvasManagenment canvas = getCanvasByRole(string);
+
                 cardPanel.add(canvas, string);
                 cardLayout.show(cardPanel, string);
+
+                    cardPanel.add(canvas, string);
+                    cardLayout.show(cardPanel, string);
+
 
             }
 

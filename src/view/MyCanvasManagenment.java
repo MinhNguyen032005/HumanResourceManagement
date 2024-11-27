@@ -47,15 +47,22 @@ public class MyCanvasManagenment extends JPanel {
         setLayout(new BorderLayout());
         add(panelMid, BorderLayout.CENTER);
         add(panelBottom, BorderLayout.SOUTH);
+
         add(panelLeftAccountant, BorderLayout.WEST);
     }
+
+        add(panelLeftAccountant, BorderLayout.WEST);}
+
 
     public MyCanvasManagenment(PanelReport panelReport, PanelBottomManagenment panelBottom, PanelLeftAccountant panelLeftAccountant) {
         setLayout(new BorderLayout());
         add(panelReport, BorderLayout.CENTER);
         add(panelBottom, BorderLayout.SOUTH);
+
         add(panelLeftAccountant, BorderLayout.WEST);
     }
+
+        add(panelLeftAccountant, BorderLayout.WEST); }
 
     public MyCanvasManagenment(PanelTimeKeeping panelTimeKeeping, PanelBottomManagenment panelBottom, PanelLeftAccountant panelLeftAccountant) {
         setLayout(new BorderLayout());
@@ -70,6 +77,7 @@ public class MyCanvasManagenment extends JPanel {
         add(panelBottom, BorderLayout.SOUTH);
         add(panelLeftAccountant, BorderLayout.WEST);
     }
+
 
 
     public MyCanvasManagenment(PanelMidManagenment panelMid, PanelBottomManagenment panelBottom, PanelLeftStaff panelLeftStaff) {
