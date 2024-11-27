@@ -5,6 +5,7 @@ import java.awt.*;
 
 // class chứa panel chính để thêm vào JFrame
 public class MyCanvasManagenment extends JPanel {
+    public MyCanvasManagenment() {}
     public MyCanvasManagenment(PanelMidManagenment panelMid, PanelBottomManagenment panelBottom, PanelLeftManagenment panelLeftManagenment) {
         setLayout(new BorderLayout());
         add(panelMid, BorderLayout.CENTER);
@@ -42,18 +43,19 @@ public class MyCanvasManagenment extends JPanel {
         add(panelBottom, BorderLayout.SOUTH);
         add(panelLeftManagenment, BorderLayout.WEST);
     }
-
     public MyCanvasManagenment(PanelMidManagenment panelMid, PanelBottomManagenment panelBottom, PanelLeftAccountant panelLeftAccountant) {
         setLayout(new BorderLayout());
         add(panelMid, BorderLayout.CENTER);
         add(panelBottom, BorderLayout.SOUTH);
-        add(panelLeftAccountant, BorderLayout.WEST);}
+        add(panelLeftAccountant, BorderLayout.WEST);
+    }
 
     public MyCanvasManagenment(PanelReport panelReport, PanelBottomManagenment panelBottom, PanelLeftAccountant panelLeftAccountant) {
         setLayout(new BorderLayout());
         add(panelReport, BorderLayout.CENTER);
         add(panelBottom, BorderLayout.SOUTH);
-        add(panelLeftAccountant, BorderLayout.WEST); }
+        add(panelLeftAccountant, BorderLayout.WEST);
+    }
 
     public MyCanvasManagenment(PanelTimeKeeping panelTimeKeeping, PanelBottomManagenment panelBottom, PanelLeftAccountant panelLeftAccountant) {
         setLayout(new BorderLayout());
@@ -67,6 +69,35 @@ public class MyCanvasManagenment extends JPanel {
         add(panelLeave, BorderLayout.CENTER);
         add(panelBottom, BorderLayout.SOUTH);
         add(panelLeftAccountant, BorderLayout.WEST);
+    }
+
+
+    public MyCanvasManagenment(PanelMidManagenment panelMid, PanelBottomManagenment panelBottom, PanelLeftStaff panelLeftStaff) {
+        setLayout(new BorderLayout());
+        add(panelMid, BorderLayout.CENTER);
+        add(panelBottom, BorderLayout.SOUTH);
+        add(panelLeftStaff, BorderLayout.WEST);
+    }
+
+    public MyCanvasManagenment(PanelTimeKeeping panelTimeKeeping, PanelBottomManagenment panelBottom, PanelLeftStaff panelLeftStaff) {
+        setLayout(new BorderLayout());
+        add(panelTimeKeeping, BorderLayout.CENTER);
+        add(panelBottom, BorderLayout.SOUTH);
+        add(panelLeftStaff, BorderLayout.WEST);
+    }
+
+    public MyCanvasManagenment(PanelSalary panelSalary, PanelBottomManagenment panelBottom, PanelLeftStaff panelLeftStaff) {
+        setLayout(new BorderLayout());
+        add(panelSalary, BorderLayout.CENTER);
+        add(panelBottom, BorderLayout.SOUTH);
+        add(panelLeftStaff, BorderLayout.WEST);
+    }
+
+    public MyCanvasManagenment(PanelTraining panelTraining, PanelBottomManagenment panelBottom, PanelLeftStaff panelLeftStaff) {
+        setLayout(new BorderLayout());
+        add(panelTraining, BorderLayout.CENTER);
+        add(panelBottom, BorderLayout.SOUTH);
+        add(panelLeftStaff, BorderLayout.WEST);
     }
 
     public MyCanvasManagenment(JPanel panelTop, JPanel panelBottom, JPanel panelLeft) {

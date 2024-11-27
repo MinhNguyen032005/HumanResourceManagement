@@ -16,4 +16,9 @@ public interface FontLoader {
     static Font loadCustomizeFont(Font font, float size) {
         return font.deriveFont(size);
     }
+
+    static Font getFont(String s) {
+
+        return null;
+    }
 }

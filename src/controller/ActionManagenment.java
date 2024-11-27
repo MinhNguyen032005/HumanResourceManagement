@@ -24,10 +24,15 @@ import java.util.*;
 public class ActionManagenment implements IControllerManagenment {
     MyCanvasManagenment myCanvas;
     MyCanvasManagenment myCanvasAccounttant;
+    MyCanvasManagenment myCanvasStaff;
+
     PanelMidManagenment panelMid;
     PanelBottomManagenment panelBottom;
+
     PanelLeftManagenment panelLeftManagenment;
     PanelLeftAccountant panelLeftAccountant;
+    PanelLeftStaff panelLeftStaff;
+
     PanelService panelService;
     PanelServiceMid panelServiceMid;
     SiginPanel siginPanel;
@@ -36,31 +41,62 @@ public class ActionManagenment implements IControllerManagenment {
     CardLayout cardLayout;
     JPanel cardPanel;
     PanelReport panelReport;
+    static final String TIMEKEEPING_PANEL = "timekeeping";
+    static final String SALARY_PANEL = "salary";
+    static final String TRAINING_PANEL = "training";
     PanelWorkManagenment panelWorkManagenment;
     PanelWorkManagenment.PanelWork panelWork;
     PanelLeave panelLeave;
     LeaveListPanel leaveListPanel;
     PanelTimeKeepingMid panelTimeKeepingMid;
     PanelTimeKeeping panelTimeKeeping;
+
     Map<String, NhanVien> nhanVienListMap;
     ArrayList<NhanVien> nhanVienArrayList;
     Map<String, String> accounts;
     ArrayList<ChamCong> chamCongs;
     Set<NghiPhep> nghiPheps;
     boolean click = false;
-    public  static  String role;
+    public static String role;
+    private PanelSalary panelSalary;
+    private PanelTraining panelTraining;
+    private NhanVien currentLoginEmployee;
+
+    public NhanVien getCurrentLoginEmployee() {
+        return currentLoginEmployee;
+    }
+
+    public void setCurrentLoginEmployee(NhanVien employee) {
+        this.currentLoginEmployee = employee;
+    }
+
+    public Map<String, NhanVien> getNhanVienListMap() {
+        return nhanVienListMap;
+    }
+
+    public ArrayList<NhanVien> getNhanVienArrayList() {
+        return nhanVienArrayList;
+    }
+
 
     //constructor
     public ActionManagenment() throws Exception {
         nghiPheps = new HashSet<>();
         chamCongs = new ArrayList<>();
+
         nhanVienListMap = new LinkedHashMap<>();
         nhanVienArrayList = new ArrayList<>();
+
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
+
         accounts = new HashMap<>();
+
         panelTimeKeepingMid = new PanelTimeKeepingMid(this);
         panelTimeKeeping = new PanelTimeKeeping(this, panelTimeKeepingMid);
+        panelSalary = new PanelSalary(this);
+        panelTraining = new PanelTraining(this);
+
         leaveListPanel = new LeaveListPanel(nghiPheps, this);
         panelLeave = new PanelLeave(this, nghiPheps);
         panelWork = new PanelWorkManagenment.PanelWork();
@@ -69,17 +105,35 @@ public class ActionManagenment implements IControllerManagenment {
         panelMid = new PanelMidManagenment(this);
         panelServiceMid = new PanelServiceMid(this);
         panelService = new PanelService(panelServiceMid);
+
         panelBottom = new PanelBottomManagenment(this);
         panelLeftManagenment = new PanelLeftManagenment(this);
         panelLeftAccountant = new PanelLeftAccountant(this);
+        panelLeftStaff = new PanelLeftStaff(this);
+
         myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
         myCanvasAccounttant = new MyCanvasManagenment(panelMid, panelBottom, panelLeftAccountant);
+        myCanvasStaff = new MyCanvasManagenment(panelMid, panelBottom, panelLeftStaff);
+
         siginPanel = new SiginPanel(this, cardPanel);
         signInForm = new SignInForm(this, cardPanel);
+
         cardPanel.add(siginPanel, "login");
         cardPanel.add(myCanvas, "truongphong");
         cardPanel.add(myCanvasAccounttant, "ketoan");
+        cardPanel.add(myCanvasStaff, "nhanvien");
+
+        cardPanel.add(panelTimeKeepingMid, TIMEKEEPING_PANEL);
+        cardPanel.add(panelSalary, SALARY_PANEL);
+        cardPanel.add(panelTraining, TRAINING_PANEL);
+
+        panelMid = new PanelMidManagenment(this);
+        panelMid.setLayout(new BorderLayout());
+        panelMid.add(cardPanel, BorderLayout.CENTER);
+
         signInFrame = new SignInFrame(cardPanel, this);
+        panelSalary = new PanelSalary(this);
+        panelTraining = new PanelTraining(this);
     }
 
     //chức năng kiểm tra từ file account.txt
@@ -118,7 +172,7 @@ public class ActionManagenment implements IControllerManagenment {
                             break;
                         }
                         case "nhanvien": {
-
+                            cardLayout.show(cardPanel, "nhanvien");
                             break;
                         }
                         case "nhansu": {
@@ -154,42 +208,70 @@ public class ActionManagenment implements IControllerManagenment {
     }
 
     private MyCanvasManagenment getCanvasByRole(String panelType) {
-        JPanel panelLeft;
-        JPanel panelTop;
+        JPanel panelLeft = null;
+        JPanel panelTop = null;
 
         switch (role) {
             case "truongphong":
                 panelLeft = panelLeftManagenment;
                 switch (panelType) {
-                    case "Báo cáo": panelTop = panelReport; break;
-                    case "Nghỉ phép": panelTop = panelLeave; break;
-                    case "Công việc": panelTop = panelWorkManagenment; break;
-                    case "Danh sách NV": panelTop = panelService; break;
-                    case "Chấm công": panelTop = panelTimeKeeping; break;
+                    case "Báo cáo":
+                        panelTop = panelReport;
+                        break;
+                    case "Nghỉ phép":
+                        panelTop = panelLeave;
+                        break;
+                    case "Công việc":
+                        panelTop = panelWorkManagenment;
+                        break;
+                    case "Danh sách NV":
+                        panelTop = panelService;
+                        break;
+                    case "Chấm công":
+                        panelTop = panelTimeKeeping;
+                        break;
                     case "Tổng hợp lương":
                         panelTop = panelReport;
                         panelLeft = panelLeftAccountant;
                         break;
-                    default: return null;
                 }
                 break;
 
             case "ketoan":
                 panelLeft = panelLeftAccountant;
                 switch (panelType) {
-                    case "Nghỉ phép": panelTop = panelLeave; break;
-                    case "Chấm công": panelTop = panelTimeKeeping; break;
-                    case "Tổng hợp lương": panelTop = panelReport; break;
-                    default: return null;
+                    case "Nghỉ phép":
+                        panelTop = panelLeave;
+                        break;
+                    case "Chấm công":
+                        panelTop = panelTimeKeeping;
+                        break;
+                    case "Tổng hợp lương":
+                        panelTop = panelReport;
+                        break;
+                }
+                break;
+            case "nhanvien":
+                panelLeft = panelLeftStaff;
+                switch (panelType) {
+                    case "Chấm công":
+                        panelTop = panelTimeKeeping;
+                        break;
+                    case "Lương":
+                        panelTop = panelSalary;
+                        break;
+                    case "Đào tạo":
+                        panelTop = panelTraining;
+                        break;
+
                 }
                 break;
 
-            default:
-                return null;
-        }
 
+        }
         return createCanvas(panelTop, panelBottom, panelLeft);
     }
+
     @Override
     public ActionListener controlButtonLeft() {
         return new ActionListener() {
@@ -197,10 +279,26 @@ public class ActionManagenment implements IControllerManagenment {
             public void actionPerformed(ActionEvent e) {
                 String string = e.getActionCommand();
                 MyCanvasManagenment canvas = getCanvasByRole(string);
-                    cardPanel.add(canvas, string);
-                    cardLayout.show(cardPanel, string);
+                cardPanel.add(canvas, string);
+                cardLayout.show(cardPanel, string);
 
+
+                JButton button = (JButton) e.getSource();
+                String command = button.getText();
+
+                switch (command) {
+                    case "Chấm công":
+                        cardLayout.show(cardPanel, TIMEKEEPING_PANEL);
+                        break;
+                    case "Lương":
+                        cardLayout.show(cardPanel, SALARY_PANEL);
+                        break;
+                    case "Đào tạo":
+                        cardLayout.show(cardPanel, TRAINING_PANEL);
+                        break;
+                }
             }
+
         };
     }
 
@@ -694,7 +792,7 @@ public class ActionManagenment implements IControllerManagenment {
                         }
 
                         // Kiểm tra tuổi (18 <= tuổi <= 60)
-                        int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+                        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
                         int age = currentYear - year;
                         if (age < 18 || age > 60) {
                             showErrorDialog("Tuổi phải từ 18 đến 60. Vui lòng kiểm tra lại.");
@@ -709,9 +807,9 @@ public class ActionManagenment implements IControllerManagenment {
 
             // Hàm hỗ trợ để lấy số ngày trong tháng
             private int getDaysInMonth(int year, int month) {
-                java.util.Calendar calendar = java.util.Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month - 1, 1); // Tháng tính từ 0-11
-                return calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH);
+                return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             }
 
             // Hàm hỗ trợ để hiện hộp thoại khi nhập và ngày tháng năm không thực tế
@@ -859,7 +957,7 @@ public class ActionManagenment implements IControllerManagenment {
                         }
 
                         // Kiểm tra tuổi (18 <= tuổi <= 60)
-                        int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+                        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
                         int age = currentYear - year;
                         if (age < 18 || age > 60) {
                             showErrorDialog("Tuổi phải từ 18 đến 60. Vui lòng kiểm tra lại.");
@@ -874,9 +972,9 @@ public class ActionManagenment implements IControllerManagenment {
 
             // Hàm hỗ trợ để lấy số ngày trong tháng
             private int getDaysInMonth(int year, int month) {
-                java.util.Calendar calendar = java.util.Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month - 1, 1); // Tháng tính từ 0-11
-                return calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH);
+                return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             }
 
             // Hàm hỗ trợ để hiện hộp thoại khi nhập và ngày tháng năm không thực tế
