@@ -41,15 +41,14 @@ public class ActionManagenment implements IControllerManagenment {
     CardLayout cardLayout;
     JPanel cardPanel;
     PanelReport panelReport;
-    static final String TIMEKEEPING_PANEL = "timekeeping";
-    static final String SALARY_PANEL = "salary";
-    static final String TRAINING_PANEL = "training";
     PanelWorkManagenment panelWorkManagenment;
     PanelWorkManagenment.PanelWork panelWork;
     PanelLeave panelLeave;
     LeaveListPanel leaveListPanel;
     PanelTimeKeepingMid panelTimeKeepingMid;
     PanelTimeKeeping panelTimeKeeping;
+    PanelSalary panelSalary;
+    PanelTraining panelTraining;
 
     Map<String, NhanVien> nhanVienListMap;
     ArrayList<NhanVien> nhanVienArrayList;
@@ -57,46 +56,20 @@ public class ActionManagenment implements IControllerManagenment {
     ArrayList<ChamCong> chamCongs;
     Set<NghiPhep> nghiPheps;
     boolean click = false;
-    public static String role;
-    private PanelSalary panelSalary;
-    private PanelTraining panelTraining;
-    private NhanVien currentLoginEmployee;
-
-    public NhanVien getCurrentLoginEmployee() {
-        return currentLoginEmployee;
-    }
-
-    public void setCurrentLoginEmployee(NhanVien employee) {
-        this.currentLoginEmployee = employee;
-    }
-
-    public Map<String, NhanVien> getNhanVienListMap() {
-        return nhanVienListMap;
-    }
-
-    public ArrayList<NhanVien> getNhanVienArrayList() {
-        return nhanVienArrayList;
-    }
-
+    public  static  String role;
 
     //constructor
     public ActionManagenment() throws Exception {
         nghiPheps = new HashSet<>();
         chamCongs = new ArrayList<>();
-
         nhanVienListMap = new LinkedHashMap<>();
         nhanVienArrayList = new ArrayList<>();
-
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
-
         accounts = new HashMap<>();
 
         panelTimeKeepingMid = new PanelTimeKeepingMid(this);
         panelTimeKeeping = new PanelTimeKeeping(this, panelTimeKeepingMid);
-        panelSalary = new PanelSalary(this);
-        panelTraining = new PanelTraining(this);
-
         leaveListPanel = new LeaveListPanel(nghiPheps, this);
         panelLeave = new PanelLeave(this, nghiPheps);
         panelWork = new PanelWorkManagenment.PanelWork();
@@ -105,35 +78,25 @@ public class ActionManagenment implements IControllerManagenment {
         panelMid = new PanelMidManagenment(this);
         panelServiceMid = new PanelServiceMid(this);
         panelService = new PanelService(panelServiceMid);
+        panelSalary = new PanelSalary(this);
+        panelTraining = new PanelTraining(this);
 
         panelBottom = new PanelBottomManagenment(this);
         panelLeftManagenment = new PanelLeftManagenment(this);
         panelLeftAccountant = new PanelLeftAccountant(this);
         panelLeftStaff = new PanelLeftStaff(this);
-
         myCanvas = new MyCanvasManagenment(panelMid, panelBottom, panelLeftManagenment);
         myCanvasAccounttant = new MyCanvasManagenment(panelMid, panelBottom, panelLeftAccountant);
         myCanvasStaff = new MyCanvasManagenment(panelMid, panelBottom, panelLeftStaff);
 
         siginPanel = new SiginPanel(this, cardPanel);
         signInForm = new SignInForm(this, cardPanel);
-
         cardPanel.add(siginPanel, "login");
         cardPanel.add(myCanvas, "truongphong");
         cardPanel.add(myCanvasAccounttant, "ketoan");
         cardPanel.add(myCanvasStaff, "nhanvien");
 
-        cardPanel.add(panelTimeKeepingMid, TIMEKEEPING_PANEL);
-        cardPanel.add(panelSalary, SALARY_PANEL);
-        cardPanel.add(panelTraining, TRAINING_PANEL);
-
-        panelMid = new PanelMidManagenment(this);
-        panelMid.setLayout(new BorderLayout());
-        panelMid.add(cardPanel, BorderLayout.CENTER);
-
         signInFrame = new SignInFrame(cardPanel, this);
-        panelSalary = new PanelSalary(this);
-        panelTraining = new PanelTraining(this);
     }
 
     //chức năng kiểm tra từ file account.txt
@@ -181,7 +144,7 @@ public class ActionManagenment implements IControllerManagenment {
                     }
                 } else {
                     JOptionPane.showMessageDialog(signInFrame, "Tên đăng nhập hoặc mật khẩu sai!", "Thông Báo", JOptionPane.WARNING_MESSAGE);
-                }
+                }// Đợi tui tí, project này chưa thêm mấy cái chỉnh sửa vô á
             }
         };
     }
@@ -263,7 +226,6 @@ public class ActionManagenment implements IControllerManagenment {
                     case "Đào tạo":
                         panelTop = panelTraining;
                         break;
-
                 }
                 break;
 
@@ -282,21 +244,6 @@ public class ActionManagenment implements IControllerManagenment {
                 cardPanel.add(canvas, string);
                 cardLayout.show(cardPanel, string);
 
-
-                JButton button = (JButton) e.getSource();
-                String command = button.getText();
-
-                switch (command) {
-                    case "Chấm công":
-                        cardLayout.show(cardPanel, TIMEKEEPING_PANEL);
-                        break;
-                    case "Lương":
-                        cardLayout.show(cardPanel, SALARY_PANEL);
-                        break;
-                    case "Đào tạo":
-                        cardLayout.show(cardPanel, TRAINING_PANEL);
-                        break;
-                }
             }
 
         };
